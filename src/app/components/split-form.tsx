@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from "react";
-import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
-import { Button, Input } from "@nextui-org/react";
-import { XCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { Plus, XCircle } from "lucide-react";
+import React, { Fragment, useCallback } from "react";
+import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 
 interface SplitFormProps {}
 
@@ -18,13 +19,14 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
   const {
     register,
     control,
-    formState: { errors },
+    formState: { errors, touchedFields },
   } = useForm<Inputs>({
     mode: "onTouched",
+
     defaultValues: {
-      splits: Array.from({ length: 1 }).map(() => ({
+      splits: Array.from({ length: 2 }).map(() => ({
         address: "",
-        portion: 0,
+        portion: 100,
       })),
     },
   });
@@ -35,69 +37,70 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
       name: "splits",
     }
   );
-  console.log(errors.splits?.[0]?.address?.message);
 
-  const [parent, enableAnimations] = useAutoAnimate(/* optional config */);
+  const [parent] = useAutoAnimate(/* optional config */);
 
-  const addRecipient = () => {
+  const addRecipient = useCallback(() => {
     prepend({
       address: "",
-      portion: 0,
+      portion: 100,
     });
-  };
+  }, [prepend]);
 
   return (
-    <div className='w-full space-y-unit-sm'>
-      <Button color='primary' onClick={addRecipient}>
-        Add a recipient
-      </Button>
+    <div className='w-full space-y-4'>
+      <div className='flex flex-row flex-wrap justify-between'>
+        <h3 className='text-2xl mb-4'>Create a Splitter</h3>
 
-      <div
-        className='flex flex-col items-center justify-stretch gap-unit-sm'
-        ref={parent}
-      >
-        {fields.map((field, index) => (
-          <fieldset key={field.id} className='block w-full'>
-            <div className='flex w-full  flex-nowrap gap-unit-sm items-start'>
+        <Button variant='outline' onClick={addRecipient}>
+          <Plus className='mr-2 h-4 w-4' />
+          Add a recipient
+        </Button>
+      </div>
+
+      <div className='space-y-2'>
+        <div className='grid grid-cols-12 gap-x-3'>
+          <span className='col-span-2 text-xs ml-1'>Portion</span>
+          <span className='col-span-9 text-xs ml-1'>Address</span>
+          <span className='col-span-1'></span>
+        </div>
+        <div className='grid grid-cols-12 gap-3' ref={parent}>
+          {fields.map((field, index) => (
+            <Fragment key={field.id}>
               <Input
-                // variant='underlined'
-                placeholder='50'
                 min={0}
-                type='number'
-                // labelPlacement='outside'
-                // label='Portion'
-                className='max-w-[100px] text-right'
+                data-1p-ignore
+                className='col-span-2'
                 {...register(`splits.${index}.portion`)}
               />
-              <Input
-                // variant='underlined'
-                type='text'
-                placeholder="Recipient's address"
-                // label='Address'
-                autoComplete='off'
-                autoCorrect='off'
-                autoCapitalize='off'
-                spellCheck='false'
-                data-1p-ignore
-                {...register(`splits.${index}.address`, {
-                  validate: (value) =>
-                    value.length > 0 || "Please enter an address",
-                })}
-                isInvalid={Boolean(errors.splits?.[index]?.address?.message)}
-              />
+              <div className='col-span-9'>
+                <Input
+                  type='text'
+                  placeholder="Recipient's address"
+                  autoComplete='off'
+                  autoCorrect='off'
+                  autoCapitalize='off'
+                  spellCheck='false'
+                  data-1p-ignore
+                  {...register(`splits.${index}.address`, {
+                    validate: (value) =>
+                      value.length > 0 || "Please enter an address",
+                  })}
+                />
+              </div>
               <Button
-                // color='danger'
-                variant='light'
+                variant='ghost'
                 onClick={() => remove(index)}
-                className='flex-none self-center'
-                isIconOnly
+                className='col-span-1'
+                size='icon'
               >
                 <XCircle />
               </Button>
-            </div>
-          </fieldset>
-        ))}
+            </Fragment>
+          ))}
+        </div>
       </div>
+      <Button className='w-full'>Create {fields.length}-way Splitter</Button>
     </div>
   );
 };

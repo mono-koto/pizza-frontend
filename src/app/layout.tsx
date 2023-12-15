@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import Nav from "./components/nav";
 import "./globals.css";
 import { Providers } from "./providers";
-import Nav from "./components/nav";
 
-const inter = Inter({ subsets: ["latin"] });
-
+import { cn } from "@/lib/utils";
+import { Inter as FontSans } from "next/font/google";
+export const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 export const metadata: Metadata = {
   title: "split.pizza",
   description: "Split your PYUSD",
@@ -18,10 +21,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en' suppressHydrationWarning>
-      <body className={inter.className}>
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable
+        )}
+      >
         <Providers>
           <div className='container mx-auto max-w-6xl'>
-            <Nav className='mb-unit-sm' />
+            <Nav className='mb-4 p-4' />
 
             <main className='p-6'>{children}</main>
           </div>

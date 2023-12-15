@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@nextui-org/react";
-import { Moon, Sun } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { LoaderIcon, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -13,16 +13,23 @@ export function ThemeSwitcher() {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted)
+    return (
+      <div>
+        <Button size='icon' variant='ghost' onClick={() => setTheme("light")}>
+          <LoaderIcon className='animate-spin' />
+        </Button>
+      </div>
+    );
 
   return (
     <div>
       {theme == "dark" ? (
-        <Button isIconOnly variant='bordered' onClick={() => setTheme("light")}>
+        <Button size='icon' variant='ghost' onClick={() => setTheme("light")}>
           <Sun />
         </Button>
       ) : (
-        <Button isIconOnly variant='bordered' onClick={() => setTheme("dark")}>
+        <Button size='icon' variant='ghost' onClick={() => setTheme("dark")}>
           <Moon />
         </Button>
       )}
