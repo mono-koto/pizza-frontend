@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Nav from "./components/nav";
+import Nav from "../components/nav";
 import "./globals.css";
 import { Providers } from "./providers";
 
