@@ -7,7 +7,8 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { PieChart } from "lucide-react";
 import React, { useCallback, useState } from "react";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
-import SplitFormPayee from "./split-form-payee";
+import { SplitFormPayee, SplitFormPayeeHeader } from "./split-form-payee";
+import { DonutChart } from "./donut-chart";
 
 export type PayeeState = {
   address: string;
@@ -22,13 +23,13 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
   const [payees, setPayees] = useState<PayeeState[]>([
     {
       address: "",
-      portion: 100,
+      portion: 5,
       id: crypto.randomUUID(),
       valid: false,
     },
     {
       address: "",
-      portion: 100,
+      portion: 5,
       id: crypto.randomUUID(),
       valid: false,
     },
@@ -45,7 +46,7 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
 
   const args: readonly [readonly `0x${string}`[], readonly bigint[]] = [
     payees.map((f) => f.address as `0x${string}`),
-    payees.map((f) => BigInt(f.portion)),
+    payees.map((f) => BigInt(f.portion || 0)),
   ];
   const prepareCreateSplitter = usePrepareContractWrite({
     abi: PizzaFactoryAbi,
@@ -81,6 +82,15 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
 
   return (
     <div className='w-full space-y-4'>
+      <DonutChart
+        width={250}
+        height={250}
+        data={payees.map((f) => ({
+          name: f.address,
+          value: f.portion,
+          id: f.id,
+        }))}
+      />
       <div className='flex flex-row flex-wrap justify-between'>
         <h3 className='text-2xl mb-4'>Create a Splitter</h3>
 
@@ -91,22 +101,16 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
       </div>
 
       <div className='space-y-2'>
-        <div className='grid grid-cols-12 gap-x-3'>
-          <span className='col-span-8 text-xs ml-1'>Address</span>
-          <span className='col-span-2 text-xs ml-1'>Portion</span>
-          <span className='col-span-1'></span>
-        </div>
-        <div className='grid grid-cols-12 gap-3 items-baseline' ref={parent}>
-          {payees.map((payee, index) => (
-            <SplitFormPayee
-              key={payee.id}
-              placeholder='Last name'
-              onChange={(state) => onChange(index, state)}
-              value={payee}
-              onRemove={() => remove(index)}
-            />
-          ))}
-        </div>
+        <SplitFormPayeeHeader />
+        {payees.map((payee, index) => (
+          <SplitFormPayee
+            key={payee.id}
+            placeholder='Last name'
+            onChange={(state) => onChange(index, state)}
+            value={payee}
+            onRemove={() => remove(index)}
+          />
+        ))}
       </div>
       <Button
         onClick={submit}

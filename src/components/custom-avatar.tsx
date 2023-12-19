@@ -1,14 +1,17 @@
 "use client";
+import { cn } from "@/lib/utils";
 import BoringAvatar from "boring-avatars";
 import Image from "next/image";
 import { useState } from "react";
 import { isAddress } from "viem";
 
 export default function CustomAvatar({
+  className,
   address,
   ensImage,
   size,
 }: {
+  className?: string;
   address?: string;
   ensImage?: string | null;
   size?: number;
@@ -22,7 +25,7 @@ export default function CustomAvatar({
   const [useFallback, setUseFallback] = useState(false);
   return (
     <div
-      className='overflow-clip rounded-full '
+      className={cn("overflow-clip rounded-full ", className)}
       style={{
         maxWidth: `${size}px`,
         maxHeight: `${size}px`,

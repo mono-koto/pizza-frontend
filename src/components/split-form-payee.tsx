@@ -15,11 +15,21 @@ interface SplitFormPayeeProps {
   onRemove: Noop;
 }
 
-function SplitFormPayee({ onChange, value, onRemove }: SplitFormPayeeProps) {
-  // const [state, setState] = useState<PayeeState>({
-  //   ...value,
-  // });
+export function SplitFormPayeeHeader() {
+  return (
+    <div className='rounded-xl border-transparent border p-5 grid grid-cols-12 '>
+      <span className='col-start-1 col-span-9 text-xs ml-1'>Address</span>
+      <span className='text-xs ml-1'>Portion</span>
+      <span className=''></span>
+    </div>
+  );
+}
 
+export function SplitFormPayee({
+  onChange,
+  value,
+  onRemove,
+}: SplitFormPayeeProps) {
   const [receiver, setReceiver] = useState<string>(value.address);
   const [portion, setPortion] = useState<number>(value.portion);
 
@@ -44,8 +54,9 @@ function SplitFormPayee({ onChange, value, onRemove }: SplitFormPayeeProps) {
   };
 
   return (
-    <div className='col-span-8 rounded-xl border-border border p-5 grid grid-cols-12 '>
+    <div className='rounded-xl border-border border p-5 grid grid-cols-12 '>
       <CustomAvatar
+        className='col-span-1'
         address={ens.data.address}
         ensImage={ens.data.avatar}
         size={40}
@@ -65,6 +76,7 @@ function SplitFormPayee({ onChange, value, onRemove }: SplitFormPayeeProps) {
       <input
         className='w-full bg-transparent focus:outline-none focus:ring-0 col-span-2'
         min={0}
+        type='number'
         data-1p-ignore
         value={portion}
         onChange={handlePortionChange}
@@ -81,5 +93,3 @@ function SplitFormPayee({ onChange, value, onRemove }: SplitFormPayeeProps) {
     </div>
   );
 }
-
-export default SplitFormPayee;

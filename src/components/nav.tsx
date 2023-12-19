@@ -17,7 +17,7 @@ export default function Nav(props: React.HTMLProps<HTMLDivElement>) {
           SPLIT.PIZZA
         </div>
         <div className='min-h-12'>
-          <ConnectButton />
+          <ConnectButton label='Connect' />
         </div>
         <div className='min-h-12'>
           <ThemeSwitcher />
