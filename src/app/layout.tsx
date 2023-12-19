@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Nav from "../components/nav";
 import "./globals.css";
-import { Providers } from "./providers";
+import { Providers } from "../components/providers";
 
 import { cn } from "@/lib/utils";
 import { Inter as FontSans } from "next/font/google";
