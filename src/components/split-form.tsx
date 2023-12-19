@@ -80,10 +80,12 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
     [setPayees]
   );
 
+  console.log(payees.map((p) => p.portion));
+
   return (
     <div className='w-full space-y-4'>
       <DonutChart
-        width={250}
+        width={650}
         height={250}
         data={payees.map((f) => ({
           name: f.address,
@@ -100,7 +102,7 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
         </Button>
       </div>
 
-      <div className='space-y-2'>
+      <div className='space-y-2' ref={parent}>
         <SplitFormPayeeHeader />
         {payees.map((payee, index) => (
           <SplitFormPayee
@@ -108,6 +110,7 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
             placeholder='Last name'
             onChange={(state) => onChange(index, state)}
             value={payee}
+            total={payees.reduce((acc, curr) => acc + curr.portion, 0)}
             onRemove={() => remove(index)}
           />
         ))}

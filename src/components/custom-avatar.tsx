@@ -4,6 +4,7 @@ import BoringAvatar from "boring-avatars";
 import Image from "next/image";
 import { useState } from "react";
 import { isAddress } from "viem";
+import { UserRound } from "lucide-react";
 
 export default function CustomAvatar({
   className,
@@ -17,21 +18,19 @@ export default function CustomAvatar({
   size?: number;
 }) {
   size = size || 40;
-
-  if (address && !isAddress(address)) {
-    console.error("Bad address provided");
-  }
-
   const [useFallback, setUseFallback] = useState(false);
-  return (
-    <div
-      className={cn("overflow-clip rounded-full ", className)}
-      style={{
-        maxWidth: `${size}px`,
-        maxHeight: `${size}px`,
-      }}
-    >
-      {!useFallback && ensImage ? (
+
+  function Img() {
+    if (!address || !isAddress(address)) {
+      console.error("CustomAvatar: invalid address provided:", address);
+      return (
+        <div className='w-full aspect-square bg-muted rounded-full flex justify-center  items-center text-muted-foreground '>
+          <UserRound className='w-4 h-4 -translate-y-[1px]' />
+        </div>
+      );
+    } else if (!useFallback && ensImage) {
+      console.log("CustomAvatar: using ENS image:", ensImage);
+      return (
         <Image
           unoptimized
           src={ensImage || ""}
@@ -42,9 +41,20 @@ export default function CustomAvatar({
             setUseFallback(true);
           }}
         />
-      ) : (
-        <BoringAvatar size='100%' name={address} variant='marble' />
-      )}
+      );
+    } else {
+      return <BoringAvatar size='100%' name={address} variant='marble' />;
+    }
+  }
+
+  return (
+    <div
+      className={cn("overflow-clip rounded-full aspect-square", className)}
+      style={{
+        maxWidth: `${size}px`,
+      }}
+    >
+      <Img />
     </div>
   );
 }
