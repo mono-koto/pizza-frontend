@@ -9,9 +9,47 @@ import React, { useCallback, useState } from "react";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
 import { SplitFormPayee, SplitFormPayeeHeader } from "./split-form-payee";
 import { DonutChart } from "./donut-chart";
+import { useTheme } from "next-themes";
+import { shuffle } from "d3";
+
+const colors: string[] = [
+  "#ea5545",
+  "#f46a9b",
+  "#ef9b20",
+  "#edbf33",
+  "#ede15b",
+  "#bdcf32",
+  "#87bc45",
+  "#27aeef",
+  "#b33dc6",
+  "#b30000",
+  "#7c1158",
+  "#4421af",
+  "#1a53ff",
+  "#0d88e6",
+  "#00b7c7",
+  "#5ad45a",
+  "#8be04e",
+  "#ebdc78",
+  "#e60049",
+  "#0bb4ff",
+  "#50e991",
+  "#e6d800",
+  "#9b19f5",
+  "#ffa300",
+  "#dc0ab4",
+  "#b3d4ff",
+  "#00bfa0",
+];
+// const colors = shuffle(complementaryColors);
+
+// Rest of the code...
 
 export type PayeeState = {
+  label?: string;
   address: string;
+  ensName?: string;
+  ensImage?: string;
   portion: number;
   id: string;
   valid: boolean;
@@ -19,29 +57,24 @@ export type PayeeState = {
 
 interface SplitFormProps {}
 
+function randomPayee() {
+  return {
+    address: "",
+    portion: 5,
+    id: crypto.randomUUID(),
+    valid: false,
+  };
+}
+
+const initialPayees = [randomPayee(), randomPayee()];
+
 const SplitForm: React.FC<SplitFormProps> = ({}) => {
-  const [payees, setPayees] = useState<PayeeState[]>([
-    {
-      address: "",
-      portion: 5,
-      id: crypto.randomUUID(),
-      valid: false,
-    },
-    {
-      address: "",
-      portion: 5,
-      id: crypto.randomUUID(),
-      valid: false,
-    },
-  ]);
+  const [payees, setPayees] = useState<PayeeState[]>(initialPayees);
 
   const [parent] = useAutoAnimate(/* optional config */);
 
   const addPayee = useCallback(() => {
-    setPayees([
-      { address: "", portion: 100, id: crypto.randomUUID(), valid: false },
-      ...payees,
-    ]);
+    setPayees([randomPayee(), ...payees]);
   }, [setPayees, payees]);
 
   const args: readonly [readonly `0x${string}`[], readonly bigint[]] = [
@@ -80,18 +113,24 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
     [setPayees]
   );
 
-  console.log(payees.map((p) => p.portion));
+  const theme = useTheme();
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+  const isDark =
+    (theme.theme === "system" && prefersDark) || theme.theme === "dark";
 
   return (
     <div className='w-full space-y-4'>
       <DonutChart
+        labelColor={isDark ? "#fff" : "#000"}
         width={650}
-        height={250}
-        data={payees.map((f) => ({
-          name: f.address,
+        height={200}
+        colors={colors}
+        dataset={payees.map((f) => ({
+          name: f.label,
           value: f.portion,
           id: f.id,
         }))}
+        className='mx-auto  w-fit'
       />
       <div className='flex flex-row flex-wrap justify-between'>
         <h3 className='text-2xl mb-4'>Create a Splitter</h3>

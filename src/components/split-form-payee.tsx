@@ -1,5 +1,5 @@
 import { XCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { Noop } from "react-hook-form";
 import { useDebounce } from "usehooks-ts";
@@ -7,6 +7,7 @@ import { useEns } from "@/hooks/useEns";
 import CustomAvatar from "./custom-avatar";
 import { PayeeState } from "./split-form";
 import { isAddress } from "viem";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 interface SplitFormPayeeProps {
   onChange: (state: PayeeState) => void;
@@ -18,10 +19,9 @@ interface SplitFormPayeeProps {
 
 export function SplitFormPayeeHeader() {
   return (
-    <div className='rounded-xl border-transparent border p-5 grid grid-cols-12 text-xs'>
-      <span className='col-start-1 col-span-9 ml-1'>Address</span>
-      <span className='ml-1'>Portion</span>
-      <span className=''></span>
+    <div className='rounded-xl border-transparent border px-5 grid grid-cols-12 text-xs gap-x-3'>
+      <span className='col-start-2 col-span-8 ml-1'>Address</span>
+      <span className='col-span-2 text-center'>Portion</span>
     </div>
   );
 }
@@ -35,17 +35,18 @@ export function SplitFormPayee({
   const [receiver, setReceiver] = useState<string>(value.address);
   const [portion, setPortion] = useState<number>(value.portion);
 
-  const debouncedAddress = useDebounce(receiver, 1000);
+  const debouncedAddress = useDebounce(receiver, 500);
   const ens = useEns(debouncedAddress);
 
   useEffect(() => {
     onChange({
+      label: receiver,
       address: ens.data.address,
       portion,
       valid: isAddress(ens.data.address),
       id: value.id,
     });
-  }, [ens.data.address, portion, value.id]);
+  }, [receiver, ens.data.address, portion, value.id]);
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setReceiver(event.target.value);
@@ -58,8 +59,24 @@ export function SplitFormPayee({
   const percentage =
     total > 0 ? `${Math.round((10000 * portion || 0) / total) / 100}%` : "";
 
+  const inputRef = useRef<HTMLInputElement>(null);
+  const focus = useCallback(
+    (e: React.MouseEvent) => {
+      if (e.target === e.currentTarget) {
+        inputRef.current?.focus();
+      }
+    },
+    [inputRef]
+  );
+
+  const [parent] = useAutoAnimate(/* optional config */);
+
   return (
-    <div className='rounded-xl border-border border p-5 gap-3 grid grid-cols-12 align-baseline'>
+    <div
+      className='rounded-xl border-border border p-5 gap-x-3 gap-y-2 grid grid-cols-12 align-baseline'
+      onClick={focus}
+      ref={parent}
+    >
       <CustomAvatar
         className='col-span-1 self-center'
         address={ens.data.address}
@@ -67,8 +84,9 @@ export function SplitFormPayee({
         size={40}
       />
       <input
+        ref={inputRef}
         type='text'
-        className='w-full bg-transparent focus:outline-none focus:ring-0 col-span-6'
+        className='w-full text-left focus:outline-none focus:ring-0 col-span-8 bg-muted p-1 px-2 rounded-md text-sm text-foreground '
         placeholder='ETH address or ENS'
         autoComplete='off'
         autoCorrect='off'
@@ -78,17 +96,14 @@ export function SplitFormPayee({
         value={receiver}
         onChange={handleAddressChange}
       />
-      <div className='col-span-2 flex flex-row align-baseline'>
-        <input
-          className='bg-transparent focus:outline-none focus:ring-0 w-2/3  text-right'
-          min={1}
-          type='number'
-          data-1p-ignore
-          value={portion}
-          onChange={handlePortionChange}
-        />
-      </div>
-      <span className='col-span-1 text-xs ml-1'>{percentage}</span>
+      <input
+        className='w-full col-span-2 text-center  focus:outline-none focus:ring-0 bg-muted p-1 px-2 rounded-md text-sm text-foreground '
+        min={1}
+        type='number'
+        data-1p-ignore
+        value={portion}
+        onChange={handlePortionChange}
+      />
       <Button
         variant='ghost'
         onClick={onRemove}
@@ -97,6 +112,15 @@ export function SplitFormPayee({
       >
         <XCircle className='w-4 h-4' />
       </Button>
+
+      {(isAddress(receiver) ||
+        (receiver.endsWith(".eth") && ens.data.address)) && (
+        <div className='col-start-2 col-span-11 text-left text-xs text-muted-foreground'>
+          {receiver.endsWith(".eth") || !ens.data.name
+            ? `✅ ${ens.data.address} | ${portion} share(s) | ${percentage}`
+            : `${ens.data.name} | ${portion} share(s) | ${percentage}`}
+        </div>
+      )}
     </div>
   );
 }

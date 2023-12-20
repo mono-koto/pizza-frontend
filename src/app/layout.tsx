@@ -29,9 +29,9 @@ export default function RootLayout({
       >
         <Providers>
           <div className='container mx-auto max-w-6xl'>
-            <Nav className='mb-4 p-4' />
+            <Nav className='p-4' />
 
-            <main className='p-6'>{children}</main>
+            <main className='p-4'>{children}</main>
           </div>
         </Providers>
       </body>

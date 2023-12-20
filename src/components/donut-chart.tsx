@@ -8,32 +8,32 @@ import { animated, useSpring } from "react-spring";
 import { useEns } from "@/hooks/useEns";
 
 type DataItem = {
-  name: string;
+  name: string | undefined;
   id: string;
   value?: number;
 };
 
-type DonutChartProps = {
+interface DonutChartProps extends React.HTMLProps<HTMLDivElement> {
+  colors: string[];
   width: number;
   height: number;
-  data: DataItem[];
-};
+  dataset: DataItem[];
+  labelColor?: string;
+}
 
-const MARGIN_X = 150;
-const MARGIN_Y = 50;
+const MARGIN_X = 100;
+const MARGIN_Y = 30;
 
-const colors = [
-  "#e0ac2b",
-  "#e85252",
-  "#6689c6",
-  "#9a6fb0",
-  "#a53253",
-  "#69b3a2",
-];
-
-export const DonutChart = ({ width, height, data }: DonutChartProps) => {
+export const DonutChart = ({
+  width,
+  height,
+  dataset,
+  colors,
+  labelColor,
+  ...remainingProps
+}: DonutChartProps) => {
   // Sort by alphabetical to maximise consistency between dataset
-  const sortedData = data.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+  const sortedData = dataset.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
 
   const radius = Math.min(width - 2 * MARGIN_X, height - 2 * MARGIN_Y) / 2;
 
@@ -43,23 +43,28 @@ export const DonutChart = ({ width, height, data }: DonutChartProps) => {
       .value((d) => d.value || 0)
       .sort(null); // Do not apply any sorting, respect the order of the provided dataset
     return pieGenerator(sortedData);
-  }, [data]);
+  }, [dataset]);
+  const total = pie.reduce((acc, curr) => acc + (curr.data.value || 0), 0);
 
   const allPaths = pie.map((slice, i) => {
     return (
       <Slice
+        labelColor={labelColor || "#000"}
         key={slice.data.id}
         radius={radius}
         slice={slice}
+        total={total}
         color={colors[i]}
       />
     );
   });
 
   return (
-    <svg width={width} height={height} style={{ display: "inline-block" }}>
-      <g transform={`translate(${width / 2}, ${height / 2})`}>{allPaths}</g>
-    </svg>
+    <div {...remainingProps}>
+      <svg width={width} height={height} style={{ display: "inline-block" }}>
+        <g transform={`translate(${width / 2}, ${height / 2})`}>{allPaths}</g>
+      </svg>
+    </div>
   );
 };
 
@@ -67,12 +72,11 @@ type SliceProps = {
   color: string;
   radius: number;
   slice: d3.PieArcDatum<DataItem>;
+  total: number;
+  labelColor: string;
 };
-const Slice = ({ slice, radius, color }: SliceProps) => {
+const Slice = ({ slice, radius, color, total, labelColor }: SliceProps) => {
   const arcGenerator = d3.arc();
-
-  const ens = useEns(slice.data.name);
-  console.log(slice.data.value);
 
   const springProps = useSpring({
     to: {
@@ -110,48 +114,51 @@ const Slice = ({ slice, radius, color }: SliceProps) => {
     })
   );
 
-  const label =
-    (ens.data.name || ens.data.address) + " (" + slice.data.value + ")";
+  const percentage = `${
+    Math.round((10000 * (slice.data.value || 0)) / total) / 100
+  }%`;
+
+  const label = slice.data.name + " (" + percentage + ")";
 
   return (
-    <>
+    <g>
+      <animated.path d={slicePath} fill={color} />
+
       <g>
-        <animated.path d={slicePath} fill={colors[slice.index]} />
-        {slice.data.name?.length && (
-          <g>
-            <animated.circle
-              cx={centroid.to((x) => x)}
-              cy={centroid.to((_, y) => y)}
-              r={2}
-            />
-            <animated.line
-              x1={centroid.to((x) => x)}
-              y1={centroid.to((_, y) => y)}
-              x2={inflexionPoint.to((x) => x)}
-              y2={inflexionPoint.to((_, y) => y)}
-              stroke={"black"}
-              fill={"black"}
-            />
-            <animated.line
-              x1={inflexionPoint.to((x) => x)}
-              y1={inflexionPoint.to((_, y) => y)}
-              x2={inflexionPoint.to((x) => (x > 0 ? x + 50 : x - 50))}
-              y2={inflexionPoint.to((_, y) => y)}
-              stroke={"black"}
-              fill={"black"}
-            />
-            <animated.text
-              x={inflexionPoint.to((x) => (x > 0 ? x + 52 : x - 52))}
-              y={inflexionPoint.to((_, y) => y)}
-              textAnchor={inflexionPoint.to((x) => (x > 0 ? "start" : "end"))}
-              dominantBaseline='middle'
-              fontSize={14}
-            >
-              {label}
-            </animated.text>
-          </g>
-        )}
+        <animated.circle
+          fill={labelColor}
+          cx={centroid.to((x) => x)}
+          cy={centroid.to((_, y) => y)}
+          r={2}
+        />
+        <animated.line
+          x1={centroid.to((x) => x)}
+          y1={centroid.to((_, y) => y)}
+          x2={inflexionPoint.to((x) => x)}
+          y2={inflexionPoint.to((_, y) => y)}
+          stroke={labelColor}
+          // fill={"black"}
+        />
+        <animated.line
+          x1={inflexionPoint.to((x) => x)}
+          y1={inflexionPoint.to((_, y) => y)}
+          x2={inflexionPoint.to((x) => (x > 0 ? x + 50 : x - 50))}
+          y2={inflexionPoint.to((_, y) => y)}
+          stroke={labelColor}
+          fill={"black"}
+        />
+        <animated.text
+          x={inflexionPoint.to((x) => (x > 0 ? x + 52 : x - 52))}
+          y={inflexionPoint.to((_, y) => y)}
+          width={10}
+          textAnchor={inflexionPoint.to((x) => (x > 0 ? "start" : "end"))}
+          dominantBaseline='middle'
+          className='text-xs'
+          fill={labelColor}
+        >
+          {label}
+        </animated.text>
       </g>
-    </>
+    </g>
   );
 };
