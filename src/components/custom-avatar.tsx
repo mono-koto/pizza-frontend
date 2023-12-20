@@ -6,17 +6,20 @@ import { useState } from "react";
 import { isAddress } from "viem";
 import { UserRound } from "lucide-react";
 
-export default function CustomAvatar({
-  className,
-  address,
-  ensImage,
-  size,
-}: {
+interface CustomAvatarProps extends React.HTMLProps<HTMLDivElement> {
   className?: string;
   address?: string;
   ensImage?: string | null;
   size?: number;
-}) {
+}
+
+export default function CustomAvatar({
+  size,
+  className,
+  ensImage,
+  address,
+  ...remainingProps
+}: CustomAvatarProps) {
   size = size || 40;
   const [useFallback, setUseFallback] = useState(false);
 
@@ -50,6 +53,7 @@ export default function CustomAvatar({
   return (
     <div
       className={cn("overflow-clip rounded-full aspect-square", className)}
+      {...remainingProps}
       style={{
         maxWidth: `${size}px`,
       }}

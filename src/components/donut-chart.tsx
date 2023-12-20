@@ -33,16 +33,16 @@ export const DonutChart = ({
   ...remainingProps
 }: DonutChartProps) => {
   // Sort by alphabetical to maximise consistency between dataset
-  const sortedData = dataset.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
 
   const radius = Math.min(width - 2 * MARGIN_X, height - 2 * MARGIN_Y) / 2;
 
   const pie = useMemo(() => {
+    // const sortedData = dataset.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
     const pieGenerator = d3
       .pie<any, DataItem>()
       .value((d) => d.value || 0)
       .sort(null); // Do not apply any sorting, respect the order of the provided dataset
-    return pieGenerator(sortedData);
+    return pieGenerator(dataset);
   }, [dataset]);
   const total = pie.reduce((acc, curr) => acc + (curr.data.value || 0), 0);
 

@@ -93,7 +93,7 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
 
   const submit = useCallback(() => {
     createSplitter.write && createSplitter.write();
-  }, [prepareCreateSplitter]);
+  }, [createSplitter]);
 
   const onChange = useCallback(
     (index: number, state: PayeeState) => {
@@ -114,7 +114,9 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
   );
 
   const theme = useTheme();
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+  const prefersDark = (window as any).matchMedia(
+    "(prefers-color-scheme: dark)"
+  );
   const isDark =
     (theme.theme === "system" && prefersDark) || theme.theme === "dark";
 
@@ -147,7 +149,8 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
           <SplitFormPayee
             key={payee.id}
             placeholder='Last name'
-            onChange={(state) => onChange(index, state)}
+            index={index}
+            onChange={onChange}
             value={payee}
             total={payees.reduce((acc, curr) => acc + curr.portion, 0)}
             onRemove={() => remove(index)}

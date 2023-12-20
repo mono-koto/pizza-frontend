@@ -10,7 +10,8 @@ import { isAddress } from "viem";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 interface SplitFormPayeeProps {
-  onChange: (state: PayeeState) => void;
+  index: number;
+  onChange: (index: number, state: PayeeState) => void;
   value: PayeeState;
   placeholder: string;
   onRemove: Noop;
@@ -20,7 +21,7 @@ interface SplitFormPayeeProps {
 export function SplitFormPayeeHeader() {
   return (
     <div className='rounded-xl border-transparent border px-5 grid grid-cols-12 text-xs gap-x-3'>
-      <span className='col-start-2 col-span-8 ml-1'>Address</span>
+      <span className='col-span-9 ml-1'>Recipient</span>
       <span className='col-span-2 text-center'>Portion</span>
     </div>
   );
@@ -31,22 +32,29 @@ export function SplitFormPayee({
   value,
   onRemove,
   total,
+  index,
 }: SplitFormPayeeProps) {
   const [receiver, setReceiver] = useState<string>(value.address);
   const [portion, setPortion] = useState<number>(value.portion);
-
   const debouncedAddress = useDebounce(receiver, 500);
   const ens = useEns(debouncedAddress);
 
+  const triggerOnChange = useCallback(
+    (payee: PayeeState) => {
+      onChange(index, payee);
+    },
+    [index, onChange]
+  );
+
   useEffect(() => {
-    onChange({
+    triggerOnChange({
       label: receiver,
       address: ens.data.address,
       portion,
       valid: isAddress(ens.data.address),
       id: value.id,
     });
-  }, [receiver, ens.data.address, portion, value.id]);
+  }, [triggerOnChange, receiver, ens.data.address, portion, value.id]);
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setReceiver(event.target.value);
@@ -60,8 +68,9 @@ export function SplitFormPayee({
     total > 0 ? `${Math.round((10000 * portion || 0) / total) / 100}%` : "";
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const focus = useCallback(
+  const focusRecipientInput = useCallback(
     (e: React.MouseEvent) => {
+      console.log(e.target, e.currentTarget);
       if (e.target === e.currentTarget) {
         inputRef.current?.focus();
       }
@@ -74,28 +83,31 @@ export function SplitFormPayee({
   return (
     <div
       className='rounded-xl border-border border p-5 gap-x-3 gap-y-2 grid grid-cols-12 align-baseline'
-      onClick={focus}
+      onClick={focusRecipientInput}
       ref={parent}
     >
-      <CustomAvatar
-        className='col-span-1 self-center'
-        address={ens.data.address}
-        ensImage={ens.data.avatar}
-        size={40}
-      />
-      <input
-        ref={inputRef}
-        type='text'
-        className='w-full text-left focus:outline-none focus:ring-0 col-span-8 bg-muted p-1 px-2 rounded-md text-sm text-foreground '
-        placeholder='ETH address or ENS'
-        autoComplete='off'
-        autoCorrect='off'
-        autoCapitalize='off'
-        spellCheck='false'
-        data-1p-ignore
-        value={receiver}
-        onChange={handleAddressChange}
-      />
+      <div className='flex flex-row col-span-9 gap-x-3'>
+        <CustomAvatar
+          className='self-center w-full '
+          address={ens.data.address}
+          ensImage={ens.data.avatar}
+          size={40}
+        />
+
+        <input
+          ref={inputRef}
+          type='text'
+          className='w-full text-left focus:outline-none focus:ring-0 bg-muted p-1 px-2 rounded-md text-sm text-foreground self-stretch'
+          placeholder='ETH address or ENS'
+          autoComplete='off'
+          autoCorrect='off'
+          autoCapitalize='off'
+          spellCheck='false'
+          data-1p-ignore
+          value={receiver}
+          onChange={handleAddressChange}
+        />
+      </div>
       <input
         className='w-full col-span-2 text-center  focus:outline-none focus:ring-0 bg-muted p-1 px-2 rounded-md text-sm text-foreground '
         min={1}
@@ -116,7 +128,7 @@ export function SplitFormPayee({
       {(isAddress(receiver) ||
         (receiver.endsWith(".eth") && ens.data.address)) && (
         <div className='col-start-2 col-span-11 text-left text-xs text-muted-foreground'>
-          {receiver.endsWith(".eth") || !ens.data.name
+          {(receiver.length > 0 && receiver.endsWith(".eth")) || !ens.data.name
             ? `✅ ${ens.data.address} | ${portion} share(s) | ${percentage}`
             : `${ens.data.name} | ${portion} share(s) | ${percentage}`}
         </div>
