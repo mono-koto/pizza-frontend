@@ -28,10 +28,10 @@ export default function RootLayout({
         )}
       >
         <Providers>
-          <div className='container mx-auto max-w-6xl'>
-            <Nav className='p-4' />
+          <div className='p-4 mx-auto'>
+            <Nav />
 
-            <main className='p-4'>{children}</main>
+            <main>{children}</main>
           </div>
         </Providers>
       </body>

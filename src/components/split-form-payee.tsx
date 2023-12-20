@@ -79,24 +79,33 @@ export function SplitFormPayee({
 
   const [parent] = useAutoAnimate(/* optional config */);
 
+  const validation = (isAddress(receiver) ||
+    (receiver.endsWith(".eth") && ens.data.address)) && (
+    <div className='text-xs text-muted-foreground col-span-11'>
+      {(receiver.length > 0 && receiver.endsWith(".eth")) || !ens.data.name
+        ? `✅ ${ens.data.address} · ${portion} share(s) · ${percentage}`
+        : `✅ ${ens.data.name} · ${portion} share(s) · ${percentage}`}
+    </div>
+  );
+
   return (
     <div
-      className='rounded-xl border-border border p-5 gap-x-3 gap-y-2 grid grid-cols-12 align-baseline'
+      className='rounded-xl border-border border p-5 gap-x-3 gap-y-3 grid grid-cols-12 items-center'
       onClick={focusRecipientInput}
       ref={parent}
     >
-      <div className='flex flex-row col-span-9 gap-x-3'>
-        <CustomAvatar
-          className='self-center w-full '
-          address={ens.data.address}
-          ensImage={ens.data.avatar}
-          size={40}
-        />
+      <CustomAvatar
+        className='self-start w-full col-span-1 row-span-2'
+        address={ens.data.address}
+        ensImage={ens.data.avatar}
+        size={40}
+      />
 
+      <div className='flex flex-row col-span-8 gap-x-3'>
         <input
           ref={inputRef}
           type='text'
-          className='w-full text-left focus:outline-none focus:ring-0 bg-muted p-1 px-2 rounded-md text-sm text-foreground self-stretch'
+          className='w-full text-left focus:outline-none focus:ring-0 bg-muted p-2 px-2 rounded-md text-sm text-foreground '
           placeholder='ETH address or ENS'
           autoComplete='off'
           autoCorrect='off'
@@ -108,7 +117,7 @@ export function SplitFormPayee({
         />
       </div>
       <input
-        className='w-full col-span-2 text-center  focus:outline-none focus:ring-0 bg-muted p-1 px-2 rounded-md text-sm text-foreground '
+        className='w-full col-span-2 text-center focus:outline-none focus:ring-0 bg-muted p-2 px-2 rounded-md text-sm text-foreground '
         min={1}
         type='number'
         data-1p-ignore
@@ -123,15 +132,7 @@ export function SplitFormPayee({
       >
         <XCircle className='w-4 h-4' />
       </Button>
-
-      {(isAddress(receiver) ||
-        (receiver.endsWith(".eth") && ens.data.address)) && (
-        <div className='col-start-2 col-span-11 text-left text-xs text-muted-foreground'>
-          {(receiver.length > 0 && receiver.endsWith(".eth")) || !ens.data.name
-            ? `✅ ${ens.data.address} | ${portion} share(s) | ${percentage}`
-            : `${ens.data.name} | ${portion} share(s) | ${percentage}`}
-        </div>
-      )}
+      {validation}
     </div>
   );
 }

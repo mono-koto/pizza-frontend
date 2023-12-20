@@ -9,7 +9,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 export default function Nav(props: React.HTMLProps<HTMLDivElement>) {
   return (
     <div {...props}>
-      <div className='flex flex-row items-center justify-between mb-4 gap-4'>
+      <div className='flex flex-row flex-wrap items-center justify-between mb-3 gap-4'>
         <div className='grow-0'>
           <Pizza />
         </div>

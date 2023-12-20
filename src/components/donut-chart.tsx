@@ -5,7 +5,6 @@
 import { useMemo } from "react";
 import * as d3 from "d3";
 import { animated, useSpring } from "react-spring";
-import { useEns } from "@/hooks/useEns";
 
 type DataItem = {
   name: string | undefined;
@@ -25,19 +24,16 @@ const MARGIN_X = 100;
 const MARGIN_Y = 30;
 
 export const DonutChart = ({
-  width,
-  height,
   dataset,
   colors,
   labelColor,
   ...remainingProps
 }: DonutChartProps) => {
-  // Sort by alphabetical to maximise consistency between dataset
-
+  const width = 1000;
+  const height = 300;
   const radius = Math.min(width - 2 * MARGIN_X, height - 2 * MARGIN_Y) / 2;
 
   const pie = useMemo(() => {
-    // const sortedData = dataset.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
     const pieGenerator = d3
       .pie<any, DataItem>()
       .value((d) => d.value || 0)
@@ -47,6 +43,7 @@ export const DonutChart = ({
   const total = pie.reduce((acc, curr) => acc + (curr.data.value || 0), 0);
 
   const allPaths = pie.map((slice, i) => {
+    const color = colors[(pie.length - i) % colors.length];
     return (
       <Slice
         labelColor={labelColor || "#000"}
@@ -54,14 +51,19 @@ export const DonutChart = ({
         radius={radius}
         slice={slice}
         total={total}
-        color={colors[i]}
+        color={color}
       />
     );
   });
 
   return (
     <div {...remainingProps}>
-      <svg width={width} height={height} style={{ display: "inline-block" }}>
+      <svg
+        width={width}
+        height={height}
+        viewBox={`0 0 ${width} ${height}`}
+        style={{ display: "inline-block", width: "100%", height: "auto" }}
+      >
         <g transform={`translate(${width / 2}, ${height / 2})`}>{allPaths}</g>
       </svg>
     </div>
@@ -118,8 +120,16 @@ const Slice = ({ slice, radius, color, total, labelColor }: SliceProps) => {
     Math.round((10000 * (slice.data.value || 0)) / total) / 100
   }%`;
 
-  const label = slice.data.name + " (" + percentage + ")";
-
+  let label = "";
+  if (slice.data.name) {
+    const name =
+      slice.data.name.length > 20
+        ? slice.data.name.slice(0, 6) + "..." + slice.data.name.slice(-6)
+        : slice.data.name;
+    label = name + " (" + percentage + ")";
+  } else {
+    label = percentage;
+  }
   return (
     <g>
       <animated.path d={slicePath} fill={color} />
@@ -142,18 +152,18 @@ const Slice = ({ slice, radius, color, total, labelColor }: SliceProps) => {
         <animated.line
           x1={inflexionPoint.to((x) => x)}
           y1={inflexionPoint.to((_, y) => y)}
-          x2={inflexionPoint.to((x) => (x > 0 ? x + 50 : x - 50))}
+          x2={inflexionPoint.to((x) => (x > 0 ? x + 30 : x - 30))}
           y2={inflexionPoint.to((_, y) => y)}
           stroke={labelColor}
           fill={"black"}
         />
         <animated.text
-          x={inflexionPoint.to((x) => (x > 0 ? x + 52 : x - 52))}
+          x={inflexionPoint.to((x) => (x > 0 ? x + 32 : x - 32))}
           y={inflexionPoint.to((_, y) => y)}
           width={10}
           textAnchor={inflexionPoint.to((x) => (x > 0 ? "start" : "end"))}
           dominantBaseline='middle'
-          className='text-xs'
+          className='text-xl lg:text-sm'
           fill={labelColor}
         >
           {label}

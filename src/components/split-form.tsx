@@ -12,7 +12,7 @@ import { DonutChart } from "./donut-chart";
 import { useTheme } from "next-themes";
 import { shuffle } from "d3";
 import { usePrefersDark } from "@/hooks/usePrefersDark";
-import { useIsMounted } from "usehooks-ts";
+import { useIsMounted, useWindowSize } from "usehooks-ts";
 
 const colors: string[] = [
   "#ea5545",
@@ -42,8 +42,7 @@ const colors: string[] = [
   "#dc0ab4",
   "#b3d4ff",
   "#00bfa0",
-];
-// const colors = shuffle(complementaryColors);
+].reverse();
 
 // Rest of the code...
 
@@ -121,19 +120,10 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
   const isDark = isMounted() ? theme.theme === "dark" || prefersDark : false;
 
   return (
-    <div className='w-full space-y-4'>
-      <div className='flex flex-row flex-wrap justify-between'>
-        <h3 className='text-2xl mb-1'>Create a Splitter</h3>
-
-        <Button variant='outline' type='button' onClick={addPayee}>
-          <PieChart className='w-4 h-4 mr-4' />
-          Add recipient
-        </Button>
-      </div>
-
+    <div className='w-full flex flex-col gap-4 2xl:flex-row-reverse items-center'>
       <DonutChart
         labelColor={isDark ? "#fff" : "#000"}
-        width={650}
+        width={500}
         height={200}
         colors={colors}
         dataset={payees.map((f) => ({
@@ -141,30 +131,40 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
           value: f.portion,
           id: f.id,
         }))}
-        className='mx-auto  w-fit'
+        className='mx-auto w-full max-w-[800px] min-w-[300px]'
       />
+      <div className='flex flex-col gap-4 w-full'>
+        <div className='flex flex-row flex-wrap justify-between gap-3'>
+          <h3 className='text-2xl mb-1'>Create a Splitter</h3>
 
-      <div className='space-y-2' ref={parent}>
-        <SplitFormPayeeHeader />
-        {payees.map((payee, index) => (
-          <SplitFormPayee
-            key={payee.id}
-            placeholder='Last name'
-            index={index}
-            onChange={onChange}
-            value={payee}
-            total={payees.reduce((acc, curr) => acc + curr.portion, 0)}
-            onRemove={() => remove(index)}
-          />
-        ))}
+          <Button variant='outline' type='button' onClick={addPayee}>
+            <PieChart className='w-4 h-4 mr-4' />
+            Add recipient
+          </Button>
+        </div>
+
+        <div className='space-y-2' ref={parent}>
+          <SplitFormPayeeHeader />
+          {payees.map((payee, index) => (
+            <SplitFormPayee
+              key={payee.id}
+              placeholder='Last name'
+              index={index}
+              onChange={onChange}
+              value={payee}
+              total={payees.reduce((acc, curr) => acc + curr.portion, 0)}
+              onRemove={() => remove(index)}
+            />
+          ))}
+        </div>
+        <Button
+          onClick={submit}
+          className='w-full'
+          disabled={!prepareCreateSplitter.isSuccess}
+        >
+          Create {payees.length}-way Splitter
+        </Button>
       </div>
-      <Button
-        onClick={submit}
-        className='w-full'
-        disabled={!prepareCreateSplitter.isSuccess}
-      >
-        Create {payees.length}-way Splitter
-      </Button>
     </div>
   );
 };
