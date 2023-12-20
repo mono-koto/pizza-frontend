@@ -11,6 +11,8 @@ import { SplitFormPayee, SplitFormPayeeHeader } from "./split-form-payee";
 import { DonutChart } from "./donut-chart";
 import { useTheme } from "next-themes";
 import { shuffle } from "d3";
+import { usePrefersDark } from "@/hooks/usePrefersDark";
+import { useIsMounted } from "usehooks-ts";
 
 const colors: string[] = [
   "#ea5545",
@@ -114,14 +116,21 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
   );
 
   const theme = useTheme();
-  const prefersDark = (window as any).matchMedia(
-    "(prefers-color-scheme: dark)"
-  );
-  const isDark =
-    (theme.theme === "system" && prefersDark) || theme.theme === "dark";
+  const isMounted = useIsMounted();
+  const prefersDark = usePrefersDark();
+  const isDark = isMounted() ? theme.theme === "dark" || prefersDark : false;
 
   return (
     <div className='w-full space-y-4'>
+      <div className='flex flex-row flex-wrap justify-between'>
+        <h3 className='text-2xl mb-1'>Create a Splitter</h3>
+
+        <Button variant='outline' type='button' onClick={addPayee}>
+          <PieChart className='w-4 h-4 mr-4' />
+          Add recipient
+        </Button>
+      </div>
+
       <DonutChart
         labelColor={isDark ? "#fff" : "#000"}
         width={650}
@@ -134,14 +143,6 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
         }))}
         className='mx-auto  w-fit'
       />
-      <div className='flex flex-row flex-wrap justify-between'>
-        <h3 className='text-2xl mb-4'>Create a Splitter</h3>
-
-        <Button variant='outline' type='button' onClick={addPayee}>
-          <PieChart className='w-4 h-4 mr-4' />
-          Add recipient
-        </Button>
-      </div>
 
       <div className='space-y-2' ref={parent}>
         <SplitFormPayeeHeader />

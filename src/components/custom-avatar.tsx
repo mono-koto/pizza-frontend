@@ -20,19 +20,20 @@ export default function CustomAvatar({
   address,
   ...remainingProps
 }: CustomAvatarProps) {
+  // console.log(address);
   size = size || 40;
   const [useFallback, setUseFallback] = useState(false);
 
   function Img() {
     if (!address || !isAddress(address)) {
-      console.error("CustomAvatar: invalid address provided:", address);
+      // console.log("[CustomAvatar] invalid address generic avatar:", address);
       return (
         <div className='w-full aspect-square bg-muted rounded-full flex justify-center  items-center text-muted-foreground '>
           <UserRound className='w-4 h-4 -translate-y-[1px]' />
         </div>
       );
     } else if (!useFallback && ensImage) {
-      console.log("CustomAvatar: using ENS image:", ensImage);
+      // console.log("[CustomAvatar] ENS avatar", ensImage);
       return (
         <Image
           unoptimized
@@ -46,6 +47,7 @@ export default function CustomAvatar({
         />
       );
     } else {
+      // console.log("[CustomAvatar] BoringAvatar fallback");
       return <BoringAvatar size='100%' name={address} variant='marble' />;
     }
   }

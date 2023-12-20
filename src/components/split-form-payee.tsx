@@ -70,7 +70,6 @@ export function SplitFormPayee({
   const inputRef = useRef<HTMLInputElement>(null);
   const focusRecipientInput = useCallback(
     (e: React.MouseEvent) => {
-      console.log(e.target, e.currentTarget);
       if (e.target === e.currentTarget) {
         inputRef.current?.focus();
       }

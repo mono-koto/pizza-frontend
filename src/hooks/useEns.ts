@@ -27,14 +27,14 @@ export const useEns = (
 
   const ensAvatar = useEnsAvatar({
     name: isAddr ? ensName.data : addressOrEns,
-    enabled: isAddr ? ensName.data !== null : true,
+    enabled: isAddr ? ensName.data !== null : addressOrEns?.endsWith(".eth"),
     chainId: 1,
     ...options,
   });
 
   const ensAddress = useEnsAddress({
     name: addressOrEns,
-    enabled: !isAddr && Boolean(addressOrEns),
+    enabled: !isAddr && addressOrEns?.endsWith(".eth"),
     chainId: 1,
     ...options,
   });
