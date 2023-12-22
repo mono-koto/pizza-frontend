@@ -13,24 +13,56 @@ type DataItem = {
 };
 
 interface DonutChartProps extends React.HTMLProps<HTMLDivElement> {
-  colors: string[];
-  width: number;
-  height: number;
+  colors?: string[];
   dataset: DataItem[];
   labelColor?: string;
+  labeled?: boolean;
 }
 
 const MARGIN_X = 100;
 const MARGIN_Y = 30;
 
+export const COLORS: string[] = [
+  "#ea5545",
+  "#f46a9b",
+  "#ef9b20",
+  "#edbf33",
+  "#ede15b",
+  "#bdcf32",
+  "#87bc45",
+  "#27aeef",
+  "#b33dc6",
+  "#b30000",
+  "#7c1158",
+  "#4421af",
+  "#1a53ff",
+  "#0d88e6",
+  "#00b7c7",
+  "#5ad45a",
+  "#8be04e",
+  "#ebdc78",
+  "#e60049",
+  "#0bb4ff",
+  "#50e991",
+  "#e6d800",
+  "#9b19f5",
+  "#ffa300",
+  "#dc0ab4",
+  "#b3d4ff",
+  "#00bfa0",
+].reverse();
+
 export const DonutChart = ({
   dataset,
-  colors,
+  colors: _colors,
   labelColor,
+  labeled,
   ...remainingProps
 }: DonutChartProps) => {
+  const colors = _colors || COLORS;
+
   const width = 1000;
-  const height = 300;
+  const height = labeled ? 300 : 1000;
   const radius = Math.min(width - 2 * MARGIN_X, height - 2 * MARGIN_Y) / 2;
 
   const pie = useMemo(() => {
@@ -52,6 +84,7 @@ export const DonutChart = ({
         slice={slice}
         total={total}
         color={color}
+        labeled={Boolean(labeled)}
       />
     );
   });
@@ -76,8 +109,16 @@ type SliceProps = {
   slice: d3.PieArcDatum<DataItem>;
   total: number;
   labelColor: string;
+  labeled: boolean;
 };
-const Slice = ({ slice, radius, color, total, labelColor }: SliceProps) => {
+const Slice = ({
+  slice,
+  radius,
+  color,
+  total,
+  labelColor,
+  labeled,
+}: SliceProps) => {
   const arcGenerator = d3.arc();
 
   const springProps = useSpring({
@@ -134,41 +175,43 @@ const Slice = ({ slice, radius, color, total, labelColor }: SliceProps) => {
     <g>
       <animated.path d={slicePath} fill={color} />
 
-      <g>
-        <animated.circle
-          fill={labelColor}
-          cx={centroid.to((x) => x)}
-          cy={centroid.to((_, y) => y)}
-          r={2}
-        />
-        <animated.line
-          x1={centroid.to((x) => x)}
-          y1={centroid.to((_, y) => y)}
-          x2={inflexionPoint.to((x) => x)}
-          y2={inflexionPoint.to((_, y) => y)}
-          stroke={labelColor}
-          // fill={"black"}
-        />
-        <animated.line
-          x1={inflexionPoint.to((x) => x)}
-          y1={inflexionPoint.to((_, y) => y)}
-          x2={inflexionPoint.to((x) => (x > 0 ? x + 30 : x - 30))}
-          y2={inflexionPoint.to((_, y) => y)}
-          stroke={labelColor}
-          fill={"black"}
-        />
-        <animated.text
-          x={inflexionPoint.to((x) => (x > 0 ? x + 32 : x - 32))}
-          y={inflexionPoint.to((_, y) => y)}
-          width={10}
-          textAnchor={inflexionPoint.to((x) => (x > 0 ? "start" : "end"))}
-          dominantBaseline='middle'
-          className='text-xl lg:text-sm'
-          fill={labelColor}
-        >
-          {label}
-        </animated.text>
-      </g>
+      {labeled && (
+        <g>
+          <animated.circle
+            fill={labelColor}
+            cx={centroid.to((x) => x)}
+            cy={centroid.to((_, y) => y)}
+            r={2}
+          />
+          <animated.line
+            x1={centroid.to((x) => x)}
+            y1={centroid.to((_, y) => y)}
+            x2={inflexionPoint.to((x) => x)}
+            y2={inflexionPoint.to((_, y) => y)}
+            stroke={labelColor}
+            // fill={"black"}
+          />
+          <animated.line
+            x1={inflexionPoint.to((x) => x)}
+            y1={inflexionPoint.to((_, y) => y)}
+            x2={inflexionPoint.to((x) => (x > 0 ? x + 30 : x - 30))}
+            y2={inflexionPoint.to((_, y) => y)}
+            stroke={labelColor}
+            fill={"black"}
+          />
+          <animated.text
+            x={inflexionPoint.to((x) => (x > 0 ? x + 32 : x - 32))}
+            y={inflexionPoint.to((_, y) => y)}
+            width={10}
+            textAnchor={inflexionPoint.to((x) => (x > 0 ? "start" : "end"))}
+            dominantBaseline='middle'
+            className='text-xl lg:text-sm'
+            fill={labelColor}
+          >
+            {label}
+          </animated.text>
+        </g>
+      )}
     </g>
   );
 };

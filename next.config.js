@@ -1,4 +1,27 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
-
-module.exports = nextConfig
+module.exports = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "static.alchemyapi.io",
+      },
+      {
+        protocol: "https",
+        hostname: "assets.coingecko.com",
+      },
+      {
+        protocol: "https",
+        hostname: "arbitrum.foundation",
+      },
+      {
+        protocol: "https",
+        hostname: "raw.githubusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "s2.coinmarketcap.com",
+      },
+    ],
+  },
+};

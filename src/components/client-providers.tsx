@@ -1,5 +1,6 @@
 "use client";
 import "@rainbow-me/rainbowkit/styles.css";
+import "react-toastify/dist/ReactToastify.css";
 
 import {
   darkTheme,
@@ -18,6 +19,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import CustomAvatar from "./custom-avatar";
+import { ToastContainer } from "react-toastify";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [
@@ -80,6 +82,11 @@ function ClientProviders({ children }: { children: React.ReactNode }) {
           theme={thirdPartyTheme === "dark" ? darkTheme() : lightTheme()}
         >
           {children}
+          <ToastContainer
+            position='bottom-right'
+            pauseOnFocusLoss={false}
+            theme={thirdPartyTheme}
+          />
         </RainbowKitProvider>
       </WagmiConfig>
     </QueryClientProvider>

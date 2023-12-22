@@ -3,48 +3,39 @@ import PizzaFactoryAbi from "@/abi/PizzaFactory.abi";
 import { Button } from "@/components/ui/button";
 import { factoryAddress } from "@/config";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-// import { randomUUID } from "crypto";
 import { PieChart } from "lucide-react";
 import React, { useCallback, useState } from "react";
-import { useContractWrite, usePrepareContractWrite } from "wagmi";
+import {
+  useContractWrite,
+  usePrepareContractWrite,
+  usePublicClient,
+  useWaitForTransaction,
+} from "wagmi";
 import { SplitFormPayee, SplitFormPayeeHeader } from "./split-form-payee";
 import { DonutChart } from "./donut-chart";
 import { useTheme } from "next-themes";
-import { shuffle } from "d3";
 import { usePrefersDark } from "@/hooks/usePrefersDark";
 import { useIsMounted, useWindowSize } from "usehooks-ts";
-
-const colors: string[] = [
-  "#ea5545",
-  "#f46a9b",
-  "#ef9b20",
-  "#edbf33",
-  "#ede15b",
-  "#bdcf32",
-  "#87bc45",
-  "#27aeef",
-  "#b33dc6",
-  "#b30000",
-  "#7c1158",
-  "#4421af",
-  "#1a53ff",
-  "#0d88e6",
-  "#00b7c7",
-  "#5ad45a",
-  "#8be04e",
-  "#ebdc78",
-  "#e60049",
-  "#0bb4ff",
-  "#50e991",
-  "#e6d800",
-  "#9b19f5",
-  "#ffa300",
-  "#dc0ab4",
-  "#b3d4ff",
-  "#00bfa0",
-].reverse();
+import { toast } from "react-toastify";
+import TransactionMessage from "./transaction-message";
+import { redirect, useRouter } from "next/navigation";
+import { decodeEventLog, getContract, getEventSignature } from "viem";
 
 // Rest of the code...
+
+const SPLITTER_CREATED_EVENT_SIGNATURE = getEventSignature({
+  type: "event",
+  name: "PizzaCreated",
+  inputs: [
+    {
+      name: "pizza",
+      type: "address",
+      indexed: true,
+      internalType: "address",
+    },
+  ],
+  anonymous: false,
+});
 
 export type PayeeState = {
   label?: string;
@@ -70,6 +61,7 @@ function randomPayee() {
 const initialPayees = [randomPayee(), randomPayee()];
 
 const SplitForm: React.FC<SplitFormProps> = ({}) => {
+  const router = useRouter();
   const [payees, setPayees] = useState<PayeeState[]>(initialPayees);
 
   const [parent] = useAutoAnimate(/* optional config */);
@@ -86,11 +78,59 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
     abi: PizzaFactoryAbi,
     address: factoryAddress,
     functionName: "create",
-    args,
+    args: [...args],
     enabled: payees.length > 0 && payees.every((f) => f.valid),
   });
 
-  const createSplitter = useContractWrite(prepareCreateSplitter.config);
+  const publicClient = usePublicClient();
+
+  const createSplitter = useContractWrite({
+    ...prepareCreateSplitter.config,
+
+    onMutate: () => {
+      toast("Initiating transaction...");
+    },
+
+    onSuccess: async (data, variables, context) => {},
+
+    onError: (data) => {
+      data.message.match("User rejected")
+        ? toast.warn("Transaction cancelled")
+        : toast.error("Transaction failed");
+    },
+  });
+
+  useWaitForTransaction({
+    confirmations: 1,
+    hash: createSplitter.data?.hash,
+
+    onSuccess: (data) => {
+      toast.success(
+        <TransactionMessage transactionHash={data.blockHash}>
+          🎉 Transaction success!
+        </TransactionMessage>
+      );
+
+      for (const log of data.logs) {
+        console.log(log);
+        try {
+          const decoded = decodeEventLog({
+            abi: PizzaFactoryAbi,
+            topics: log.topics,
+          });
+          console.log(decoded);
+
+          if (decoded.eventName === "PizzaCreated") {
+            router.push(`/${decoded.args.pizza}`);
+            return;
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      console.error("Expected log not found");
+    },
+  });
 
   const submit = useCallback(() => {
     createSplitter.write && createSplitter.write();
@@ -117,29 +157,29 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
   const theme = useTheme();
   const isMounted = useIsMounted();
   const prefersDark = usePrefersDark();
-  const isDark = isMounted() ? theme.theme === "dark" || prefersDark : false;
+  const isDark =
+    isMounted() &&
+    (theme.theme === "dark" || (theme.theme === "system" && prefersDark));
 
   return (
-    <div className='w-full flex flex-col gap-4 2xl:flex-row-reverse items-center'>
+    <div className='w-full flex flex-col gap-4 items-center'>
       <DonutChart
         labelColor={isDark ? "#fff" : "#000"}
-        width={500}
-        height={200}
-        colors={colors}
         dataset={payees.map((f) => ({
           name: f.label,
           value: f.portion,
           id: f.id,
         }))}
         className='mx-auto w-full max-w-[800px] min-w-[300px]'
+        labeled
       />
       <div className='flex flex-col gap-4 w-full'>
         <div className='flex flex-row flex-wrap justify-between gap-3'>
-          <h3 className='text-2xl mb-1'>Create a Splitter</h3>
+          <h3 className='text-2xl mb-1'>New Splitter</h3>
 
           <Button variant='outline' type='button' onClick={addPayee}>
             <PieChart className='w-4 h-4 mr-4' />
-            Add recipient
+            Add payee
           </Button>
         </div>
 
@@ -162,7 +202,9 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
           className='w-full'
           disabled={!prepareCreateSplitter.isSuccess}
         >
-          Create {payees.length}-way Splitter
+          {payees.length === 0
+            ? "Add a payee"
+            : `Create ${payees.length}-way Splitter`}
         </Button>
       </div>
     </div>

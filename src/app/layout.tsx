@@ -28,10 +28,9 @@ export default function RootLayout({
         )}
       >
         <Providers>
-          <div className='p-4 mx-auto'>
+          <div className='p-4 mx-auto container max-w-6xl'>
             <Nav />
-
-            <main>{children}</main>
+            <main className='mt-8'>{children}</main>
           </div>
         </Providers>
       </body>
