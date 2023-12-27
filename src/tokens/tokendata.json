@@ -1,0 +1,520 @@
+{
+  "1": {
+    "tokens": {
+      "0x111111111117dC0aa78b770fA6A738034120C302": {
+        "name": "1inch",
+        "symbol": "1INCH",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/13469/thumb/1inch-token.png?1608803028",
+        "isNative": false
+      },
+      "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9": {
+        "name": "Aave",
+        "symbol": "AAVE",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/12645/thumb/AAVE.png?1601374110",
+        "isNative": false
+      },
+      "0xdBdb4d16EdA451D0503b854CF79D55697F90c8DF": {
+        "name": "Alchemix",
+        "symbol": "ALCX",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/14113/thumb/Alchemix.png?1614409874",
+        "isNative": false
+      },
+      "0xBB0E17EF65F82Ab018d8EDd776e8DD940327B28b": {
+        "name": "Axie Infinity",
+        "symbol": "AXS",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/13029/thumb/axie_infinity_logo.png?1604471082",
+        "isNative": false
+      },
+      "0xba100000625a3754423978a60c9317c58a424e3D": {
+        "name": "Balancer",
+        "symbol": "BAL",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xba100000625a3754423978a60c9317c58a424e3D/logo.png",
+        "isNative": false
+      },
+      "0x0D8775F648430679A709E98d2b0Cb6250d2887EF": {
+        "name": "Basic Attention Token",
+        "symbol": "BAT",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/677/thumb/basic-attention-token.png?1547034427",
+        "isNative": false
+      },
+      "0x1F573D6Fb3F13d689FF844B4cE37794d79a7FF1C": {
+        "name": "Bancor Network Token",
+        "symbol": "BNT",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1F573D6Fb3F13d689FF844B4cE37794d79a7FF1C/logo.png",
+        "isNative": false
+      },
+      "0xBe9895146f7AF43049ca1c1AE358B0541Ea49704": {
+        "name": "Coinbase Wrapped Staked ETH",
+        "symbol": "cbETH",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/27008/large/cbeth.png",
+        "isNative": false
+      },
+      "0x3506424F91fD33084466F402d5D97f05F8e3b4AF": {
+        "name": "Chiliz",
+        "symbol": "CHZ",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/8834/thumb/Chiliz.png?1561970540",
+        "isNative": false
+      },
+      "0xc00e94Cb662C3520282E6f5717214004A7f26888": {
+        "name": "Compound",
+        "symbol": "COMP",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xc00e94Cb662C3520282E6f5717214004A7f26888/logo.png",
+        "isNative": false
+      },
+      "0xA0b73E1Ff0B80914AB6fe0444E65848C4C34450b": {
+        "name": "Cronos",
+        "symbol": "CRO",
+        "decimals": 8,
+        "logo": "https://assets.coingecko.com/coins/images/7310/thumb/oCw2s3GI_400x400.jpeg?1645172042",
+        "isNative": false
+      },
+      "0xD533a949740bb3306d119CC777fa900bA034cd52": {
+        "name": "Curve DAO Token",
+        "symbol": "CRV",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xD533a949740bb3306d119CC777fa900bA034cd52/logo.png",
+        "isNative": false
+      },
+      "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B": {
+        "name": "Convex Finance",
+        "symbol": "CVX",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/15585/thumb/convex.png?1621256328",
+        "isNative": false
+      },
+      "0x6B175474E89094C44Da98b954EedeAC495271d0F": {
+        "name": "Dai Stablecoin",
+        "symbol": "DAI",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png",
+        "isNative": false
+      },
+      "0xF629cBd94d3791C9250152BD8dfBDF380E2a3B9c": {
+        "name": "Enjin Coin",
+        "symbol": "ENJ",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/1102/thumb/enjin-coin-logo.png?1547035078",
+        "isNative": false
+      },
+      "0x853d955aCEf822Db058eb8505911ED77F175b99e": {
+        "name": "Frax",
+        "symbol": "FRAX",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/13422/thumb/frax_logo.png?1608476506",
+        "isNative": false
+      },
+      "0x6810e776880C02933D47DB1b9fc05908e5386b96": {
+        "name": "Gnosis Token",
+        "symbol": "GNO",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6810e776880C02933D47DB1b9fc05908e5386b96/logo.png",
+        "isNative": false
+      },
+      "0xc944E90C64B2c07662A292be6244BDf05Cda44a7": {
+        "name": "The Graph",
+        "symbol": "GRT",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/13397/thumb/Graph_Token.png?1608145566",
+        "isNative": false
+      },
+      "0xDe30da39c46104798bB5aA3fe8B9e0e1F348163F": {
+        "name": "Gitcoin",
+        "symbol": "GTC",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/15810/thumb/gitcoin.png?1621992929",
+        "isNative": false
+      },
+      "0xdd974D5C2e2928deA5F71b9825b8b646686BD200": {
+        "name": "Kyber Network Crystal",
+        "symbol": "KNC",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdd974D5C2e2928deA5F71b9825b8b646686BD200/logo.png",
+        "isNative": false
+      },
+      "0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32": {
+        "name": "Lido DAO",
+        "symbol": "LDO",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/13573/thumb/Lido_DAO.png?1609873644",
+        "isNative": false
+      },
+      "0x514910771AF9Ca656af840dff83E8264EcF986CA": {
+        "name": "ChainLink Token",
+        "symbol": "LINK",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x514910771AF9Ca656af840dff83E8264EcF986CA/logo.png",
+        "isNative": false
+      },
+      "0xBBbbCA6A901c926F240b89EacB641d8Aec7AEafD": {
+        "name": "LoopringCoin V2",
+        "symbol": "LRC",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xBBbbCA6A901c926F240b89EacB641d8Aec7AEafD/logo.png",
+        "isNative": false
+      },
+      "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0": {
+        "name": "Liquity USD",
+        "symbol": "LUSD",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/14666/thumb/Group_3.png?1617631327",
+        "isNative": false
+      },
+      "0x0F5D2fB29fb7d3CFeE444a200298f468908cC942": {
+        "name": "Decentraland",
+        "symbol": "MANA",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/878/thumb/decentraland-mana.png?1550108745",
+        "isNative": false
+      },
+      "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0": {
+        "name": "Polygon",
+        "symbol": "MATIC",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/4713/thumb/matic-token-icon.png?1624446912",
+        "isNative": false
+      },
+      "0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3": {
+        "name": "Magic Internet Money",
+        "symbol": "MIM",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/16786/thumb/mimlogopng.png?1624979612",
+        "isNative": false
+      },
+      "0x09a3EcAFa817268f77BE1283176B946C4ff2E608": {
+        "name": "Mirror Protocol",
+        "symbol": "MIR",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/13295/thumb/mirror_logo_transparent.png?1611554658",
+        "isNative": false
+      },
+      "0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2": {
+        "name": "Maker",
+        "symbol": "MKR",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2/logo.png",
+        "isNative": false
+      },
+      "0xd26114cd6EE289AccF82350c8d8487fedB8A0C07": {
+        "name": "OMG Network",
+        "symbol": "OMG",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/776/thumb/OMG_Network.jpg?1591167168",
+        "isNative": false
+      },
+      "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8": {
+        "name": "PayPal USD",
+        "symbol": "PYUSD",
+        "decimals": 6,
+        "logo": "https://assets.coingecko.com/coins/images/31212/large/PYUSD_Logo_%282%29.png?1691458314",
+        "isNative": false
+      },
+      "0x03ab458634910AaD20eF5f1C8ee96F1D6ac54919": {
+        "name": "Rai Reflex Index",
+        "symbol": "RAI",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/14004/thumb/RAI-logo-coin.png?1613592334",
+        "isNative": false
+      },
+      "0x1985365e9f78359a9B6AD760e32412f4a445E862": {
+        "name": "Reputation Augur v1",
+        "symbol": "REP",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1985365e9f78359a9B6AD760e32412f4a445E862/logo.png",
+        "isNative": false
+      },
+      "0x3845badAde8e6dFF049820680d1F14bD3903a5d0": {
+        "name": "The Sandbox",
+        "symbol": "SAND",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/12129/thumb/sandbox_logo.jpg?1597397942",
+        "isNative": false
+      },
+      "0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F": {
+        "name": "Synthetix Network Token",
+        "symbol": "SNX",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F/logo.png",
+        "isNative": false
+      },
+      "0xD31a59c85aE9D8edEFeC411D448f90841571b89c": {
+        "name": "SOL Wormhole ",
+        "symbol": "SOL",
+        "decimals": 9,
+        "logo": "https://assets.coingecko.com/coins/images/22876/thumb/SOL_wh_small.png?1644224316",
+        "isNative": false
+      },
+      "0x090185f2135308BaD17527004364eBcC2D37e5F6": {
+        "name": "Spell Token",
+        "symbol": "SPELL",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/15861/thumb/abracadabra-3.png?1622544862",
+        "isNative": false
+      },
+      "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2": {
+        "name": "Sushi",
+        "symbol": "SUSHI",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/12271/thumb/512x512_Logo_no_chop.png?1606986688",
+        "isNative": false
+      },
+      "0x04Fa0d235C4abf4BcF4787aF4CF447DE572eF828": {
+        "name": "UMA Voting Token v1",
+        "symbol": "UMA",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x04Fa0d235C4abf4BcF4787aF4CF447DE572eF828/logo.png",
+        "isNative": false
+      },
+      "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984": {
+        "name": "Uniswap",
+        "symbol": "UNI",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png",
+        "isNative": false
+      },
+      "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": {
+        "name": "USDCoin",
+        "symbol": "USDC",
+        "decimals": 6,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",
+        "isNative": false
+      },
+      "0xdAC17F958D2ee523a2206206994597C13D831ec7": {
+        "name": "Tether USD",
+        "symbol": "USDT",
+        "decimals": 6,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png",
+        "isNative": false
+      },
+      "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599": {
+        "name": "Wrapped BTC",
+        "symbol": "WBTC",
+        "decimals": 8,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png",
+        "isNative": false
+      },
+      "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2": {
+        "name": "Wrapped Ether",
+        "symbol": "WETH",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+        "isNative": false
+      },
+      "0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e": {
+        "name": "yearn finance",
+        "symbol": "YFI",
+        "decimals": 18,
+        "logo": "https://assets.coingecko.com/coins/images/11849/thumb/yfi-192x192.png?1598325330",
+        "isNative": false
+      },
+      "0xE41d2489571d322189246DaFA5ebDe1F4699F498": {
+        "name": "0x Protocol Token",
+        "symbol": "ZRX",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xE41d2489571d322189246DaFA5ebDe1F4699F498/logo.png",
+        "isNative": false
+      },
+      "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE": {
+        "name": "Ether",
+        "symbol": "ETH",
+        "decimals": 18,
+        "logo": "/ethereum-eth.svg",
+        "isNative": true
+      },
+      "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84": {
+        "name": "stETH",
+        "symbol": "stETH",
+        "decimals": 18,
+        "logo": "https://tokens.1inch.io/0xae7ab96520de3a18e5e111b5eaab095312d7fe84.png",
+        "isNative": false
+      },
+      "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0": {
+        "name": "WrappedliquidstakedEther2.0",
+        "symbol": "wstETH",
+        "decimals": 18,
+        "logo": "https://tokens.1inch.io/0x7f39c581f595b53c5cb19bd0b3f8da6c935e2ca0.png",
+        "isNative": false
+      },
+      "0xae78736Cd615f374D3085123A210448E74Fc6393": {
+        "name": "RocketPoolETH",
+        "symbol": "rETH",
+        "decimals": 18,
+        "logo": "https://tokens.1inch.io/0xae78736cd615f374d3085123a210448e74fc6393.png",
+        "isNative": false
+      }
+    },
+    "symbols": {
+      "1INCH": "0x111111111117dC0aa78b770fA6A738034120C302",
+      "AAVE": "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
+      "ALCX": "0xdBdb4d16EdA451D0503b854CF79D55697F90c8DF",
+      "AXS": "0xBB0E17EF65F82Ab018d8EDd776e8DD940327B28b",
+      "BAL": "0xba100000625a3754423978a60c9317c58a424e3D",
+      "BAT": "0x0D8775F648430679A709E98d2b0Cb6250d2887EF",
+      "BNT": "0x1F573D6Fb3F13d689FF844B4cE37794d79a7FF1C",
+      "cbETH": "0xBe9895146f7AF43049ca1c1AE358B0541Ea49704",
+      "CHZ": "0x3506424F91fD33084466F402d5D97f05F8e3b4AF",
+      "COMP": "0xc00e94Cb662C3520282E6f5717214004A7f26888",
+      "CRO": "0xA0b73E1Ff0B80914AB6fe0444E65848C4C34450b",
+      "CRV": "0xD533a949740bb3306d119CC777fa900bA034cd52",
+      "CVX": "0x4e3FBD56CD56c3e72c1403e103b45Db9da5B9D2B",
+      "DAI": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "ENJ": "0xF629cBd94d3791C9250152BD8dfBDF380E2a3B9c",
+      "FRAX": "0x853d955aCEf822Db058eb8505911ED77F175b99e",
+      "GNO": "0x6810e776880C02933D47DB1b9fc05908e5386b96",
+      "GRT": "0xc944E90C64B2c07662A292be6244BDf05Cda44a7",
+      "GTC": "0xDe30da39c46104798bB5aA3fe8B9e0e1F348163F",
+      "KNC": "0xdd974D5C2e2928deA5F71b9825b8b646686BD200",
+      "LDO": "0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32",
+      "LINK": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
+      "LRC": "0xBBbbCA6A901c926F240b89EacB641d8Aec7AEafD",
+      "LUSD": "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0",
+      "MANA": "0x0F5D2fB29fb7d3CFeE444a200298f468908cC942",
+      "MATIC": "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0",
+      "MIM": "0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3",
+      "MIR": "0x09a3EcAFa817268f77BE1283176B946C4ff2E608",
+      "MKR": "0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2",
+      "OMG": "0xd26114cd6EE289AccF82350c8d8487fedB8A0C07",
+      "PYUSD": "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8",
+      "RAI": "0x03ab458634910AaD20eF5f1C8ee96F1D6ac54919",
+      "REP": "0x1985365e9f78359a9B6AD760e32412f4a445E862",
+      "SAND": "0x3845badAde8e6dFF049820680d1F14bD3903a5d0",
+      "SNX": "0xC011a73ee8576Fb46F5E1c5751cA3B9Fe0af2a6F",
+      "SOL": "0xD31a59c85aE9D8edEFeC411D448f90841571b89c",
+      "SPELL": "0x090185f2135308BaD17527004364eBcC2D37e5F6",
+      "SUSHI": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "UMA": "0x04Fa0d235C4abf4BcF4787aF4CF447DE572eF828",
+      "UNI": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      "USDC": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "USDT": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "WBTC": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+      "WETH": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "YFI": "0x0bc529c00C6401aEF6D220BE8C6Ea1667F6Ad93e",
+      "ZRX": "0xE41d2489571d322189246DaFA5ebDe1F4699F498",
+      "ETH": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
+      "stETH": "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
+      "wstETH": "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0",
+      "rETH": "0xae78736Cd615f374D3085123A210448E74Fc6393"
+    },
+    "preferredOrder": [
+      "PYUSD",
+      "USDC",
+      "USDT",
+      "DAI",
+      "FRAX",
+      "ETH",
+      "WETH",
+      "WBTC",
+      "1INCH",
+      "AAVE",
+      "ALCX",
+      "AXS",
+      "BAL",
+      "BAT",
+      "BNT",
+      "cbETH",
+      "CHZ",
+      "COMP",
+      "CRO",
+      "CRV",
+      "CVX",
+      "ENJ",
+      "GNO",
+      "GRT",
+      "GTC",
+      "KNC",
+      "LDO",
+      "LINK",
+      "LRC",
+      "LUSD",
+      "MANA",
+      "MATIC",
+      "MIM",
+      "MIR",
+      "MKR",
+      "OMG",
+      "RAI",
+      "REP",
+      "rETH",
+      "SAND",
+      "SNX",
+      "SOL",
+      "SPELL",
+      "stETH",
+      "SUSHI",
+      "UMA",
+      "UNI",
+      "wstETH",
+      "YFI",
+      "ZRX"
+    ]
+  },
+  "11155111": {
+    "tokens": {
+      "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984": {
+        "name": "Uniswap",
+        "symbol": "UNI",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png",
+        "isNative": false
+      },
+      "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14": {
+        "name": "Wrapped Ether",
+        "symbol": "WETH",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+        "isNative": false
+      },
+      "0x45df5e83b9400421cb3b262b31ee7236b61219d5": {
+        "name": "USDCoin",
+        "symbol": "USDC",
+        "decimals": 6,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png",
+        "isNative": false
+      },
+      "0x523c8591fbe215b5af0bead65e65df783a37bcbc": {
+        "name": "Tether USD",
+        "symbol": "USDT",
+        "decimals": 6,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png",
+        "isNative": false
+      },
+      "0x7b79995e5f793a07bc00c21412e50ecae098e7f9": {
+        "name": "Wrapped Ether",
+        "symbol": "WETH",
+        "decimals": 18,
+        "logo": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+        "isNative": false
+      },
+      "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE": {
+        "name": "Ether",
+        "symbol": "ETH",
+        "decimals": 18,
+        "logo": "/ethereum-eth.svg",
+        "isNative": true
+      }
+    },
+    "symbols": {
+      "UNI": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      "WETH": "0x7b79995e5f793a07bc00c21412e50ecae098e7f9",
+      "USDC": "0x45df5e83b9400421cb3b262b31ee7236b61219d5",
+      "USDT": "0x523c8591fbe215b5af0bead65e65df783a37bcbc",
+      "ETH": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+    },
+    "preferredOrder": [
+      "USDC",
+      "USDT",
+      "ETH",
+      "WETH",
+      "UNI"
+    ]
+  }
+}

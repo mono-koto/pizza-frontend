@@ -17,8 +17,6 @@ export default function RecentSplitters() {
       }),
   });
 
-  console.log(splitterCreationsQuery.status);
-
   return (
     <div className='flex flex-col gap-4'>
       <h3 className='text-xl font-bold'>👩‍🍳 Recent splitters</h3>

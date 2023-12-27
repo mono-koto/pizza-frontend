@@ -17,3 +17,13 @@ export interface CreationInfo {
   createdAt: bigint;
   creator: Address;
 }
+
+export interface TokenDetails {
+  symbol: string;
+  name: string;
+  address: Address;
+  decimals: number;
+  chainId: number;
+  logoURI: string;
+  isNative?: boolean;
+}

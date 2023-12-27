@@ -2,17 +2,17 @@ import { addressColors } from "@/lib/utils";
 import { CreationInfo, Splitter, SplitterAssetState } from "@/models";
 import Link from "next/link";
 import { formatUnits } from "viem";
-import { useToken } from "wagmi";
+import { useChainId, useToken } from "wagmi";
 import BlockscannerLink from "./blockscanner-link";
 import CustomAvatar from "./custom-avatar";
 import { DonutChart } from "./donut-chart";
 import { Button } from "./ui/button";
+import SplitterMiniDonutChart from "./splitter-mini-donut-chart";
 
 export default function SplitterListItem(
   props: Splitter & SplitterAssetState & CreationInfo
 ) {
-  const colors = addressColors(props.payees);
-
+  const chainId = useChainId();
   const tokenQuery = useToken({
     address: props.token,
   });
@@ -31,22 +31,14 @@ export default function SplitterListItem(
   return (
     <div className='flex flex-row gap-4 text-xs splitter-list-item border border-border rounded-lg p-4 justify-stretch'>
       <div className=' self-start flex flex-col justify-center'>
-        <DonutChart
-          colors={colors}
-          className='w-[100px] h-[100px] donut'
-          dataset={props.shares.map((s, i) => ({
-            id: props.payees[i],
-            name: props.payees[i],
-            value: Number(s),
-          }))}
-        />
+        <SplitterMiniDonutChart address={props.address} />
         <Button
           asChild
           size='sm'
           className='justify-self-stretch no-underline text-xs h-7'
           variant='ghost'
         >
-          <Link href={`/${props.address}`}>Details</Link>
+          <Link href={`/${chainId}/${props.address}`}>Details</Link>
         </Button>
       </div>
       <div className=' w-full space-y-2'>

@@ -58,6 +58,7 @@ export default function CustomAvatar({
       {...remainingProps}
       style={{
         maxWidth: `${size}px`,
+        ...remainingProps.style,
       }}
     >
       <Img />

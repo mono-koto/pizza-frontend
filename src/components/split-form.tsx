@@ -1,11 +1,12 @@
 "use client";
 import PizzaFactoryAbi from "@/abi/PizzaFactory.abi";
 import { Button } from "@/components/ui/button";
-import { factoryAddress } from "@/config";
+
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { PieChart } from "lucide-react";
 import React, { useCallback, useState } from "react";
 import {
+  useChainId,
   useContractWrite,
   usePrepareContractWrite,
   usePublicClient,
@@ -20,6 +21,8 @@ import { toast } from "react-toastify";
 import TransactionMessage from "./transaction-message";
 import { redirect, useRouter } from "next/navigation";
 import { decodeEventLog, getContract, getEventSignature } from "viem";
+import getConfig from "@/lib/config";
+import { useChain } from "react-spring";
 
 // Rest of the code...
 
@@ -61,6 +64,8 @@ function randomPayee() {
 const initialPayees = [randomPayee(), randomPayee()];
 
 const SplitForm: React.FC<SplitFormProps> = ({}) => {
+  const chainId = useChainId();
+  const { factoryAddress } = getConfig(chainId);
   const router = useRouter();
   const [payees, setPayees] = useState<PayeeState[]>(initialPayees);
 
@@ -112,16 +117,14 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
       );
 
       for (const log of data.logs) {
-        console.log(log);
         try {
           const decoded = decodeEventLog({
             abi: PizzaFactoryAbi,
             topics: log.topics,
           });
-          console.log(decoded);
 
           if (decoded.eventName === "PizzaCreated") {
-            router.push(`/${decoded.args.pizza}`);
+            router.push(`/${chainId}/${decoded.args.pizza}`);
             return;
           }
         } catch (e) {

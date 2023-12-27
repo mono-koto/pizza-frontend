@@ -1,3 +1,5 @@
+"use server";
+
 import ERC20ABI from "@/abi/ERC20.abi";
 import PizzaAbi from "@/abi/Pizza.abi";
 import PizzaFactoryAbi from "@/abi/PizzaFactory.abi";
@@ -5,6 +7,106 @@ import getConfig from "@/lib/config";
 import { createClient } from "@/lib/viemClient";
 import { CreationInfo, Splitter } from "@/models";
 import { Address } from "viem";
+import axios from "axios";
+import { ETH_ADDRESS } from "@/config/config";
+
+export async function getReleasedAndBalances({
+  chainId,
+  address,
+}: {
+  chainId: number;
+  address: Address;
+}) {
+  const tokensData = getConfig(chainId).tokens;
+  const client = createClient(chainId);
+  const tokenAddresses = tokensData.preferredOrder
+    .map(
+      (symbol) => tokensData.symbols[symbol as keyof typeof tokensData.symbols]
+    )
+    .filter(
+      (addr) =>
+        !tokensData.tokens[addr as keyof typeof tokensData.tokens].isNative
+    ) as Address[];
+
+  const [balance, totalReleased, tokenBalances] = await Promise.all([
+    client.getBalance({ address }),
+    client.readContract({
+      abi: PizzaAbi,
+      address,
+      functionName: "totalReleased",
+    }),
+    client.multicall({
+      contracts: tokenAddresses
+        .map((tokenAddress) => [
+          {
+            abi: ERC20ABI,
+            address: tokenAddress,
+            functionName: "balanceOf",
+            args: [address],
+          },
+          {
+            abi: PizzaAbi,
+            address,
+            functionName: "erc20TotalReleased",
+            args: [tokenAddress],
+          },
+        ])
+        .flat(),
+      allowFailure: false,
+    }),
+  ]);
+
+  const ethIndex = tokensData.preferredOrder.indexOf("ETH");
+  if (ethIndex < 0) {
+    throw new Error("ETH not in preferred order");
+  }
+  console.log(tokenBalances.length, tokenBalances);
+  tokenBalances.splice(ethIndex, 0, balance, totalReleased);
+  console.log(tokenBalances.length, tokenBalances);
+
+  const tokenBalanceStates = tokenAddresses
+    .map((address, index) => ({
+      address,
+      balance: tokenBalances[2 * index] as bigint,
+      totalReleased: tokenBalances[2 * index + 1] as bigint,
+      ...tokensData.tokens[address as keyof typeof tokensData.tokens],
+    }))
+    .filter(
+      (token) =>
+        token.balance > 0n ||
+        token.totalReleased > 0n ||
+        token.symbol === "PYUSD" ||
+        token.symbol === "ETH"
+    );
+
+  return tokenBalanceStates as {
+    address: Address;
+    name?: string;
+    symbol?: string;
+    decimals?: number;
+    logo?: string;
+    balance: bigint;
+  }[];
+}
+
+export const tokenPrice = async ({ address }: { address: Address }) => {
+  const apiKey = "YOUR_API_KEY"; // Replace with your CoinMarketCap API key
+  const apiUrl = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${address}&convert=USD`;
+
+  try {
+    const response = await axios.get(apiUrl, {
+      headers: {
+        "X-CMC_PRO_API_KEY": apiKey,
+      },
+    });
+
+    const price = response.data.data[address].quote.USD.price;
+    return price;
+  } catch (error) {
+    console.error("Error fetching token price:", error);
+    return null;
+  }
+};
 
 export async function getSplitterState({
   chainId,

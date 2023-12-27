@@ -16,7 +16,6 @@ export const alchemyNetwork = (chainId: number) => {
 };
 
 export const alchemyClient = (chainId: number) => {
-  console.log(API_KEY, alchemyNetwork(chainId));
   return new Alchemy({
     apiKey: API_KEY,
     network: alchemyNetwork(chainId),

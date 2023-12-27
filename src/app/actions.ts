@@ -8,7 +8,7 @@ import { Address } from "viem";
 import {
   getSplitterPayeesShares,
   getSplitterState,
-} from "./[splitterAddr]/actions";
+} from "./[chainId]/[splitterAddr]/actions";
 
 type SplitterCreation = Splitter & SplitterAssetState & CreationInfo;
 
