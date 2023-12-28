@@ -22,6 +22,10 @@ module.exports = {
         protocol: "https",
         hostname: "s2.coinmarketcap.com",
       },
+      {
+        protocol: "https",
+        hostname: "tokens.1inch.io",
+      },
     ],
   },
 };

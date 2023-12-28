@@ -25,6 +25,6 @@ export const chainConfig = {
 };
 
 import COLORS from "./graph-colors";
-import preferredTokenOrder from "./preferred-token-order.json";
+import preferredTokenOrder from "./ordered-preferred-tokens.json";
 
 export { COLORS, preferredTokenOrder };

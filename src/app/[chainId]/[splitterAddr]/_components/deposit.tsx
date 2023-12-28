@@ -9,150 +9,188 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { TokenDetails } from "@/models";
 
-// import { useTokenDetails } from "@/hooks/useTokenDetails";
-// import { usePreferredTokens, useTokens } from "@/hooks/useTokens";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "cmdk";
-import { useState } from "react";
-import { Address, isAddress } from "viem";
-import { CommandList } from "@/components/ui/command";
-import Image from "next/image";
-import { TokenButton } from "./token-button";
-import getConfig from "@/lib/config";
-import { useChainId } from "wagmi";
+import { Label } from "@/components/ui/label";
 import { useTokenDetails } from "@/hooks/useTokenDetails";
+import { useCallback, useState } from "react";
+import { Address, parseUnits } from "viem";
 
-interface TokenSelectProps {
-  defaultToken?: Address;
-  onChange: (token: TokenDetails) => void;
+import ERC20Abi from "@/abi/ERC20.abi";
+import { revalidatePath } from "next/cache";
+import Image from "next/image";
+import { toast } from "react-toastify";
+import {
+  useAccount,
+  useBalance,
+  useChainId,
+  useContractWrite,
+  usePrepareContractWrite,
+  usePrepareSendTransaction,
+  useSendTransaction,
+  useWaitForTransaction,
+} from "wagmi";
+import { GasFeeDisplay } from "./gas-fee-display";
+
+import { invalidateCache } from "../actions";
+import { useContractGasEstimate } from "@/hooks/useContractGasEstimate";
+import { SelectToken } from "./select-token";
+import Link from "next/link";
+
+interface DepositProps {
+  defaultToken: Address;
+  splitter: Address;
 }
 
-function TokenDisplay({ token }: { token: TokenDetails | undefined }) {
-  if (!token) {
-    return <span>Select a token</span>;
-  } else {
-    return (
-      <>
-        <Image
-          src={token.logoURI}
-          className='mr-1.5 h-6 w-6'
-          width={24}
-          height={24}
-          alt={`${token.symbol} Token Logo`}
-        />
-        <div>{token.symbol}</div>
-      </>
-    );
-  }
-}
-
-export function TokenSelect({ defaultToken, onChange }: TokenSelectProps) {
+export function Deposit({ defaultToken, splitter }: DepositProps) {
   const chainId = useChainId();
-  const tokenData = getConfig(chainId);
-
-  const [commandInputValue, setCommandInputValue] = useState("");
-  const [currentToken, setCurrentToken] = useState<Address | undefined>(
-    defaultToken
-  );
-
-  const currentTokenDetails = useTokenDetails(currentToken);
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState<TokenDetails | undefined>();
+  const [amountInput, setAmountInput] = useState("");
 
-  const onSelect = (token: TokenDetails) => {
-    setOpen(false);
-    setValue(token);
-    setCurrentToken(token.address);
-    if (token !== value) {
-      onChange(token);
-    }
+  const [currentTokenAddress, setCurrentTokenAddress] =
+    useState<Address>(defaultToken);
+  const tokenDetails = useTokenDetails({ address: currentTokenAddress });
+
+  const handleAmountInputChange = (event: any) => {
+    setAmountInput(event.target.value);
   };
+  const inputDisabled = !tokenDetails.data;
 
-  const onCommandInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCommandInputValue(e.target.value);
-    if (isAddress(e.target.value)) {
-      setCurrentToken(e.target.value);
+  const account = useAccount();
+  const balanceQuery = useBalance({
+    address: account.address,
+    token: tokenDetails.data?.isNative ? undefined : currentTokenAddress,
+    enabled: Boolean(tokenDetails.data),
+  });
+
+  const rawAmountInput = parseUnits(
+    amountInput,
+    tokenDetails.data?.decimals || 0
+  );
+  const writeEnabled = Boolean(
+    balanceQuery.data &&
+      rawAmountInput > 0n &&
+      rawAmountInput <= balanceQuery.data.value
+  );
+  const prepareTransfer = usePrepareContractWrite({
+    abi: ERC20Abi,
+    address: writeEnabled ? currentTokenAddress : undefined, // workaround the wagmi bug
+    functionName: "transfer",
+    args: [splitter, rawAmountInput],
+    enabled: writeEnabled, // wagmi but ignores the enabled flag
+  });
+
+  const transfer = useContractWrite(prepareTransfer.config);
+
+  const prepareTransferETH = usePrepareSendTransaction({
+    to: splitter,
+    value: rawAmountInput,
+    enabled: writeEnabled,
+  });
+
+  const transferETH = useSendTransaction(prepareTransferETH.config);
+
+  useWaitForTransaction({
+    hash: transfer.data?.hash || transferETH.data?.hash,
+    onSuccess: () => {
+      toast.success("Deposit successful");
+      setOpen(false);
+      balanceQuery.refetch();
+      invalidateCache({
+        chainId,
+        address: splitter,
+      });
+    },
+    onError: () => {
+      toast.error("Deposit failed");
+    },
+  });
+
+  const handleDeposit = useCallback(async () => {
+    if (tokenDetails.data?.isNative) {
+      transferETH.sendTransaction?.();
+    } else {
+      transfer.write?.();
     }
+  }, [
+    transfer.write,
+    transferETH.sendTransaction,
+    tokenDetails.data?.isNative,
+  ]);
+
+  const disabled = tokenDetails.data?.isNative
+    ? !prepareTransferETH.isSuccess
+    : !prepareTransfer.isSuccess;
+
+  const handleOpenChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      setAmountInput("");
+    }
+    setOpen(isOpen);
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button className='p h-fit rounded-xl bg-primary'>
-          <TokenDisplay token={currentTokenDetails} />
+          Deposit {tokenDetails.data?.symbol || ""}
         </Button>
       </DialogTrigger>
       <DialogContent className='px-4'>
         <DialogHeader>
           <DialogTitle>Select Token</DialogTitle>
-          <DialogDescription>
-            Select the token you want to send.
-          </DialogDescription>
+          <DialogDescription>Deposit into this splitter</DialogDescription>
         </DialogHeader>
+        <div className='flex flex-col space-y-4'>
+          {/* <SelectToken defaultToken={defaultToken} onChange={(token) => {}} /> */}
 
-        <div className='flex flex-row flex-wrap justify-center gap-2'>
-          {preferredTokens.map((token, i) => (
-            <TokenButton
-              tokenDetails={token}
-              key={i}
-              onClick={() => onSelect(token)}
-            />
-          ))}
+          <div className='border-gray flex flex-col rounded-xl border p-2'>
+            <div className='flex flex-row items-center justify-between'>
+              <div className='flex-1'>
+                <Label className='text-sm'>Amount to deposit:</Label>
+
+                <input
+                  placeholder='0.0'
+                  type='number'
+                  value={amountInput}
+                  onChange={handleAmountInputChange}
+                  className='h-12 w-full border-none bg-transparent text-4xl focus:outline-none focus:ring-0'
+                  disabled={inputDisabled}
+                />
+              </div>
+
+              <Image
+                src={tokenDetails.data?.logo || ""}
+                alt={`${tokenDetails.data?.symbol || ""} Token Logo`}
+                height={50}
+                width={50}
+              />
+            </div>
+            <div className='flex flex-row justify-between gap-2 text-xs'>
+              <span className='text-gray-500'>
+                Your balance: {balanceQuery.data?.formatted} (
+                <SelectToken
+                  defaultToken={currentTokenAddress}
+                  onChange={setCurrentTokenAddress}
+                  buttonElement={
+                    <a className='text-xs text-primary-foreground hover:underline cursor-pointer'>
+                      Use a different token
+                    </a>
+                  }
+                />
+                )
+              </span>
+            </div>
+          </div>
+
+          <Button
+            className='p h-fit rounded-xl bg-primary'
+            disabled={disabled}
+            onClick={handleDeposit}
+          >
+            Deposit
+          </Button>
         </div>
-
-        <Command className='space-y-4'>
-          <CommandInput
-            autoFocus
-            placeholder='Search tokens...'
-            className='h-9 w-full p-1'
-            onChangeCapture={onCommandInputChange}
-            value={commandInputValue}
-          />
-          <CommandEmpty>No tokens found.</CommandEmpty>
-          <CommandList className='w-full overflow-x-clip'>
-            <CommandGroup>
-              {tokens.map((token) => (
-                <CommandItem
-                  className=' cursor-pointer rounded-md p-1 transition-colors duration-75 aria-selected:bg-primary aria-selected:text-primary-foreground'
-                  key={[token.address, token.symbol].join("-")}
-                  value={`${token.address} ${token.name} ${token.symbol}`}
-                  onSelect={() => {
-                    onSelect(token);
-                  }}
-                  hidden={false}
-                >
-                  <TokenListDisplay token={token} />
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
       </DialogContent>
     </Dialog>
-  );
-}
-
-function TokenListDisplay({ token }: { token: TokenDetails }) {
-  return (
-    <div className='flex flex-row items-center space-x-2 pr-2'>
-      <Image
-        src={token.logoURI}
-        className='h-6 w-6'
-        alt={`${token.name} Token Logo`}
-        width={24}
-        height={24}
-      />
-      <div className='overflow-ellipsis'>
-        <div>{token.name}</div>
-        <div className='text-sm'>{token.symbol}</div>
-      </div>
-    </div>
   );
 }

@@ -24,6 +24,6 @@ export interface TokenDetails {
   address: Address;
   decimals: number;
   chainId: number;
-  logoURI: string;
+  logo: string;
   isNative?: boolean;
 }

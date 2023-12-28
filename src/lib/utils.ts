@@ -30,3 +30,12 @@ export function addressColors(addresses: readonly Address[]) {
     return COLORS[Number(colorIndex)];
   });
 }
+
+export function isURL(s: any) {
+  try {
+    new URL(s);
+    return true;
+  } catch {
+    return false;
+  }
+}

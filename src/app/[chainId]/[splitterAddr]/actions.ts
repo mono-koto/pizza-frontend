@@ -3,12 +3,33 @@
 import ERC20ABI from "@/abi/ERC20.abi";
 import PizzaAbi from "@/abi/Pizza.abi";
 import PizzaFactoryAbi from "@/abi/PizzaFactory.abi";
+import { alchemyClient } from "@/lib/alchemy";
 import getConfig from "@/lib/config";
 import { createClient } from "@/lib/viemClient";
 import { CreationInfo, Splitter } from "@/models";
+import { revalidatePath } from "next/cache";
 import { Address } from "viem";
-import axios from "axios";
-import { ETH_ADDRESS } from "@/config/config";
+
+export async function invalidateCache({
+  chainId,
+  address,
+}: {
+  chainId: number;
+  address: Address;
+}) {
+  revalidatePath(`/${chainId}/${address}`);
+}
+
+export async function getTokenBalances({
+  address,
+  chainId,
+}: {
+  address: Address;
+  chainId: number;
+}) {
+  const alchemy = alchemyClient(chainId);
+  return await alchemy.core.getTokensForOwner(address);
+}
 
 export async function getReleasedAndBalances({
   chainId,
@@ -60,9 +81,7 @@ export async function getReleasedAndBalances({
   if (ethIndex < 0) {
     throw new Error("ETH not in preferred order");
   }
-  console.log(tokenBalances.length, tokenBalances);
   tokenBalances.splice(ethIndex, 0, balance, totalReleased);
-  console.log(tokenBalances.length, tokenBalances);
 
   const tokenBalanceStates = tokenAddresses
     .map((address, index) => ({
@@ -89,24 +108,24 @@ export async function getReleasedAndBalances({
   }[];
 }
 
-export const tokenPrice = async ({ address }: { address: Address }) => {
-  const apiKey = "YOUR_API_KEY"; // Replace with your CoinMarketCap API key
-  const apiUrl = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${address}&convert=USD`;
+// export const tokenPrice = async ({ address }: { address: Address }) => {
+//   const apiKey = "YOUR_API_KEY"; // Replace with your CoinMarketCap API key
+//   const apiUrl = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${address}&convert=USD`;
 
-  try {
-    const response = await axios.get(apiUrl, {
-      headers: {
-        "X-CMC_PRO_API_KEY": apiKey,
-      },
-    });
+//   try {
+//     const response = await axios.get(apiUrl, {
+//       headers: {
+//         "X-CMC_PRO_API_KEY": apiKey,
+//       },
+//     });
 
-    const price = response.data.data[address].quote.USD.price;
-    return price;
-  } catch (error) {
-    console.error("Error fetching token price:", error);
-    return null;
-  }
-};
+//     const price = response.data.data[address].quote.USD.price;
+//     return price;
+//   } catch (error) {
+//     console.error("Error fetching token price:", error);
+//     return null;
+//   }
+// };
 
 export async function getSplitterState({
   chainId,

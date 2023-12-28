@@ -5,6 +5,9 @@ import { useMemo } from "react";
 import { Address } from "viem";
 import { useChainId } from "wagmi";
 import { fetchToken } from "@wagmi/core";
+import { orderedTokens } from "@/lib/tokens";
+import { isURL } from "@/lib/utils";
+import { alchemyClient } from "@/lib/alchemy";
 
 export function backupTokenUri(address: Address) {
   return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
@@ -12,36 +15,73 @@ export function backupTokenUri(address: Address) {
 
 export function useTokenMap() {
   const chainId = useChainId();
-  const tokenList = getConfig(chainId).tokens;
+  const tokenData = getConfig(chainId).tokens;
   const tokenMap = useMemo(
     () =>
       new Map<Address, TokenDetails>(
-        Object.entries(tokenList) as [Address, TokenDetails][]
+        Object.entries(tokenData.tokens) as [Address, TokenDetails][]
       ),
-    [tokenList]
+    [tokenData]
   );
 
   return tokenMap;
 }
 
+export function useOrderedTokens() {
+  const chainId = useChainId();
+  return useMemo(() => orderedTokens(chainId), [chainId]);
+}
+
 /// Consult local token list details before going out to network
-export function useTokenDetails(address?: Address) {
+export function useTokenDetails(
+  props: { address?: Address } | { symbol?: string }
+) {
   const chainId = useChainId();
   const tokenMap = useTokenMap();
 
+  const tokenData = getConfig(chainId).tokens;
+
+  const address =
+    (props as { address?: Address }).address ||
+    (tokenData.symbols[
+      (props as { symbol?: string }).symbol as keyof typeof tokenData.symbols
+    ] as Address);
+
   return useQuery({
     queryKey: ["tokenDetails", chainId, address],
-    queryFn: async () => {
-      const fetched = await fetchToken({
-        address: "0xc18360217d8f7ab5e7c516566761ea12ce7f9d72",
-      });
+    queryFn: async (): Promise<TokenDetails> => {
+      const token = address && tokenMap.get(address.toLowerCase() as Address);
+
+      if (token) {
+        console.debug("found in local list", token.symbol, token.name);
+        return (
+          token && {
+            ...token,
+            chainId,
+            logo: token.logo.length ? token.logo : backupTokenUri(address),
+          }
+        );
+      }
+
+      const fetched = await alchemyClient(chainId).core.getTokenMetadata(
+        address
+      );
+      if (!fetched.logo) {
+        // no logo means not a token worth returning
+        throw new Error("Not found");
+      }
+
       return {
-        ...fetched,
+        address,
+        name: fetched.name || "",
+        symbol: fetched.symbol || "",
+        decimals: fetched.decimals || 0,
         chainId,
-        logoURI: address ? backupTokenUri(address) : "",
-      } as TokenDetails;
+        logo: fetched.logo || backupTokenUri(address),
+      };
     },
-    initialData: address && tokenMap.get(address.toLowerCase() as Address),
+    enabled: Boolean(address),
+    retry: false,
     staleTime: Infinity,
   });
 }

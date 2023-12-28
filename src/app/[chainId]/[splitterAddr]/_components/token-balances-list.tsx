@@ -1,15 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { Address, isAddress } from "viem";
-import { useChainId } from "wagmi";
 
-import { alchemyClient } from "@/lib/alchemy";
 import { notFound } from "next/navigation";
-import { Fragment, useMemo } from "react";
+import { Fragment } from "react";
 import { TokenBalanceRow } from "./token-balance-row";
-import getConfig from "@/lib/config";
+import useTokensForOwner from "@/hooks/useTokensForOwner";
 
 export const revalidate = 60; // revalidate at most every minute
 
@@ -18,21 +15,7 @@ export default function TokenBalancesList({ address }: { address: Address }) {
     notFound();
   }
 
-  const chainId = useChainId();
-
-  const alchemy = useMemo(() => alchemyClient(chainId), [chainId]);
-
-  const balancesQuery = useInfiniteQuery({
-    queryKey: ["token-balances-list", address, chainId],
-    queryFn: async ({ pageParam = undefined }) => {
-      return alchemy.core.getTokensForOwner(address, {
-        contractAddresses: Object.values(getConfig(chainId).tokens.symbols),
-        pageKey: pageParam,
-      });
-    },
-    getNextPageParam: (lastPage) => lastPage.pageKey,
-    enabled: isAddress(address),
-  });
+  const balancesQuery = useTokensForOwner({ address });
 
   if (balancesQuery.isError) {
     return <div>Error: {balancesQuery.error?.toLocaleString()}</div>;
@@ -49,7 +32,7 @@ export default function TokenBalancesList({ address }: { address: Address }) {
                 <div key={`${index}-${i}`}>
                   <TokenBalanceRow
                     token={{
-                      balance: b.balance || "0",
+                      balance: b.rawBalance ? BigInt(b.rawBalance) : 0n,
                       decimals: b.decimals,
                       // rawBalance: b.rawBalance || "0",
                       logoURI: b.logo,

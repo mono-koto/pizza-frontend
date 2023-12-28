@@ -9,8 +9,7 @@ type TokenBalance = {
   address: Address;
   decimals?: number;
   logoURI?: string;
-  balance: string;
-  // rawBalance: string;
+  balance: bigint;
 };
 
 interface TokenBalanceRowProps {
@@ -40,7 +39,7 @@ export const TokenBalanceRow: React.FC<TokenBalanceRowProps> = ({ token }) => {
       </div>
       <div>{token.symbol}</div>
       <div className='grow text-right'>
-        {formatTokenAmount(BigInt(token.balance), decimals)}
+        {formatTokenAmount(token.balance, decimals)}
       </div>
     </div>
   );

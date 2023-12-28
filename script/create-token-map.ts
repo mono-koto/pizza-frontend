@@ -4,7 +4,7 @@ import sepoliaTokenList from "../src/tokens/supplemental.tokenlist.json";
 import tokenAllowList from "../src/tokens/token-allowlist.json";
 import { sepolia, mainnet } from "viem/chains";
 
-import preferredTokenOrder from "@/config/preferred-token-order.json";
+import preferredTokenOrder from "@/config/ordered-preferred-tokens.json";
 
 const rawTokenList = [...mainTokenList.tokens, ...sepoliaTokenList.tokens];
 
