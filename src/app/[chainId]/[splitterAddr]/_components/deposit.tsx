@@ -111,11 +111,7 @@ export function Deposit({ defaultToken, splitter }: DepositProps) {
     } else {
       transfer.write?.();
     }
-  }, [
-    transfer.write,
-    transferETH.sendTransaction,
-    tokenDetails.data?.isNative,
-  ]);
+  }, [transfer, transferETH, tokenDetails.data?.isNative]);
 
   const disabled = tokenDetails.data?.isNative
     ? !prepareTransferETH.isSuccess

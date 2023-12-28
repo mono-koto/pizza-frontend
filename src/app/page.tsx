@@ -13,7 +13,7 @@ export default function Home() {
         </p>
         <p>
           When someone sends tokens or ETH to a splitter, the value can only
-          release only according to the portions you've predefined.
+          release only according to the portions you&apos;ve predefined.
         </p>
         <p>
           Of course, some great{" "}
@@ -22,7 +22,7 @@ export default function Home() {
           </Link>{" "}
           <Link href='https://splits.org/'>Splitters</Link> already exist! But
           the Split.Pizza dApp is gas-optimized for smaller recipient groups,
-          has a super easy UI, and we've added a few special features
+          has a super easy UI, and we&apos;ve added special features
           specifically for PYUSD!
         </p>
         <p>
