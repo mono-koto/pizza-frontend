@@ -4,6 +4,7 @@ import { useSplitter } from "@/hooks/useSplitter";
 import { addressColors } from "@/lib/utils";
 import { DonutChart } from "./donut-chart";
 import { Address } from "viem";
+import useIsDark from "@/hooks/useIsDark";
 
 export default function SplitterMiniDonutChart({
   address,
@@ -16,6 +17,7 @@ export default function SplitterMiniDonutChart({
   if (!splitterQuery.data) return null;
 
   const colors = addressColors(splitterQuery.data.payees);
+
   return (
     <DonutChart
       colors={colors}

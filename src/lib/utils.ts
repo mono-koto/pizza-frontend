@@ -16,7 +16,7 @@ export function formatPercent(share: number | bigint, total: number | bigint) {
 }
 
 export function formatTokenAmount(amount: bigint, decimals: number) {
-  const precision = Math.floor(decimals / 4);
+  const precision = Math.floor(decimals / 3);
 
   return Number(
     Number(formatUnits(amount, decimals)).toFixed(precision)

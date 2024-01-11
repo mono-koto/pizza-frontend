@@ -2,10 +2,14 @@
 
 import React from "react";
 
-import { ThemeSwitcher } from "./theme-switcher";
 import { Pizza } from "lucide-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const ThemeSwitcher = dynamic(() => import("./theme-switcher"), {
+  ssr: false,
+});
 
 export default function Nav(props: React.HTMLProps<HTMLDivElement>) {
   return (

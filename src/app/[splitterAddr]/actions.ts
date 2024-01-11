@@ -7,28 +7,12 @@ import { alchemyClient } from "@/lib/alchemy";
 import getConfig from "@/lib/config";
 import { createClient } from "@/lib/viemClient";
 import { CreationInfo, Splitter } from "@/models";
+import { AssetTransfersCategory, SortingOrder } from "alchemy-sdk";
 import { revalidatePath } from "next/cache";
 import { Address } from "viem";
 
-export async function invalidateCache({
-  chainId,
-  address,
-}: {
-  chainId: number;
-  address: Address;
-}) {
-  revalidatePath(`/${chainId}/${address}`);
-}
-
-export async function getTokenBalances({
-  address,
-  chainId,
-}: {
-  address: Address;
-  chainId: number;
-}) {
-  const alchemy = alchemyClient(chainId);
-  return await alchemy.core.getTokensForOwner(address);
+export async function invalidateCache({ address }: { address: Address }) {
+  revalidatePath(`/${address}`);
 }
 
 export async function getReleasedAndBalances({
@@ -40,14 +24,14 @@ export async function getReleasedAndBalances({
 }) {
   const tokensData = getConfig(chainId).tokens;
   const client = createClient(chainId);
-  const tokenAddresses = tokensData.preferredOrder
-    .map(
-      (symbol) => tokensData.symbols[symbol as keyof typeof tokensData.symbols]
-    )
-    .filter(
-      (addr) =>
-        !tokensData.tokens[addr as keyof typeof tokensData.tokens].isNative
-    ) as Address[];
+  const tokenAddresses = tokensData.preferredOrder.map(
+    (symbol) => tokensData.symbols[symbol as keyof typeof tokensData.symbols]
+  ) as Address[];
+
+  const erc20TokensOnly = tokenAddresses.filter(
+    (addr) =>
+      !tokensData.tokens[addr as keyof typeof tokensData.tokens].isNative
+  );
 
   const [balance, totalReleased, tokenBalances] = await Promise.all([
     client.getBalance({ address }),
@@ -57,7 +41,7 @@ export async function getReleasedAndBalances({
       functionName: "totalReleased",
     }),
     client.multicall({
-      contracts: tokenAddresses
+      contracts: erc20TokensOnly
         .map((tokenAddress) => [
           {
             abi: ERC20ABI,
@@ -81,8 +65,12 @@ export async function getReleasedAndBalances({
   if (ethIndex < 0) {
     throw new Error("ETH not in preferred order");
   }
-  tokenBalances.splice(ethIndex, 0, balance, totalReleased);
 
+  console.log();
+  console.log(tokenBalances);
+  tokenBalances.splice(ethIndex * 2, 0, balance, totalReleased);
+  console.log(tokenBalances);
+  console.log();
   const tokenBalanceStates = tokenAddresses
     .map((address, index) => ({
       address,
@@ -98,6 +86,7 @@ export async function getReleasedAndBalances({
         token.symbol === "ETH"
     );
 
+  console.log(tokenBalanceStates.map((t) => [t.symbol, t.balance]));
   return tokenBalanceStates as {
     address: Address;
     name?: string;

@@ -1,6 +1,7 @@
+import { Button } from "@/components/ui/button";
 import { formatTokenAmount } from "@/lib/utils";
-import { TokenDetails } from "@/models";
 import Image from "next/image";
+import { release } from "os";
 import { Address } from "viem";
 
 type TokenBalance = {
@@ -14,18 +15,22 @@ type TokenBalance = {
 
 interface TokenBalanceRowProps {
   token: TokenBalance;
+  releaseButton?: React.ReactNode;
 }
 
-const SIZE = 20;
+const SIZE = 32;
 
-export const TokenBalanceRow: React.FC<TokenBalanceRowProps> = ({ token }) => {
+export const TokenBalanceRow = ({
+  token,
+  releaseButton,
+}: TokenBalanceRowProps) => {
   const decimals = typeof token.decimals === "undefined" ? 18 : token.decimals;
   return (
-    <div className='flex flex-row gap-2'>
-      <div className='w-fit h-fit grow-0'>
+    <div className='flex flex-row items-baseline gap-2'>
+      <div className='w-fit h-fit grow-0 self-center justify-self-center'>
         {token.logoURI ? (
           <Image
-            className='self-center'
+            className=''
             src={token.logoURI}
             width={SIZE}
             height={SIZE}
@@ -41,6 +46,7 @@ export const TokenBalanceRow: React.FC<TokenBalanceRowProps> = ({ token }) => {
       <div className='grow text-right'>
         {formatTokenAmount(token.balance, decimals)}
       </div>
+      <div>{releaseButton}</div>
     </div>
   );
 };

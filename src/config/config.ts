@@ -3,12 +3,15 @@ import { localhost, mainnet, sepolia } from "viem/chains";
 import tokendata from "@/tokens/tokendata.json";
 
 export const ETH_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
+export const ETH_ADDRESS_REGEX = new RegExp(`^${ETH_ADDRESS}$`, "i");
+
+export const PYUSD_ADDRESS = "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8";
 
 export const alchemyKey = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY as string;
 
 export const mainnetConfig = {
   factoryAddress: "0x003722fBd9F70b4d022948104E1eE5E997687BD9" as Address,
-  preferredToken: "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8" as Address, // PYUSD
+  preferredToken: PYUSD_ADDRESS as Address, // PYUSD
   tokens: tokendata["1"],
 };
 
@@ -18,10 +21,15 @@ export const sepoliaConfig = {
   tokens: tokendata["11155111"],
 };
 
+export const localhostConfig = {
+  ...mainnetConfig,
+  factoryAddress: "0x3291d9c24B98427BF554f749564e441F9ED1ce02" as Address,
+};
+
 export const chainConfig = {
   [mainnet.id]: mainnetConfig,
   [sepolia.id]: sepoliaConfig,
-  [localhost.id]: mainnetConfig,
+  [localhost.id]: localhostConfig,
 };
 
 import COLORS from "./graph-colors";

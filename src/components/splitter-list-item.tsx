@@ -38,7 +38,7 @@ export default function SplitterListItem(
           className='justify-self-stretch no-underline text-xs h-7'
           variant='ghost'
         >
-          <Link href={`/${chainId}/${props.address}`}>Details</Link>
+          <Link href={`/${props.address}`}>Details</Link>
         </Button>
       </div>
       <div className=' w-full space-y-2'>

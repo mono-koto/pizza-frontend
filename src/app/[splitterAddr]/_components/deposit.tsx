@@ -16,7 +16,6 @@ import { useCallback, useState } from "react";
 import { Address, parseUnits } from "viem";
 
 import ERC20Abi from "@/abi/ERC20.abi";
-import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import {
@@ -29,12 +28,10 @@ import {
   useSendTransaction,
   useWaitForTransaction,
 } from "wagmi";
-import { GasFeeDisplay } from "./gas-fee-display";
 
 import { invalidateCache } from "../actions";
-import { useContractGasEstimate } from "@/hooks/useContractGasEstimate";
 import { SelectToken } from "./select-token";
-import Link from "next/link";
+import { Wallet } from "lucide-react";
 
 interface DepositProps {
   defaultToken: Address;
@@ -66,17 +63,19 @@ export function Deposit({ defaultToken, splitter }: DepositProps) {
     amountInput,
     tokenDetails.data?.decimals || 0
   );
-  const writeEnabled = Boolean(
-    balanceQuery.data &&
-      rawAmountInput > 0n &&
-      rawAmountInput <= balanceQuery.data.value
+
+  const sufficientBalance = Boolean(
+    balanceQuery.data && rawAmountInput <= balanceQuery.data.value
   );
+
+  const canTransfer = sufficientBalance && rawAmountInput > 0n;
+
   const prepareTransfer = usePrepareContractWrite({
     abi: ERC20Abi,
-    address: writeEnabled ? currentTokenAddress : undefined, // workaround the wagmi bug
+    address: canTransfer ? currentTokenAddress : undefined, // workaround the wagmi bug
     functionName: "transfer",
     args: [splitter, rawAmountInput],
-    enabled: writeEnabled, // wagmi but ignores the enabled flag
+    enabled: canTransfer, // wagmi but ignores the enabled flag
   });
 
   const transfer = useContractWrite(prepareTransfer.config);
@@ -84,7 +83,7 @@ export function Deposit({ defaultToken, splitter }: DepositProps) {
   const prepareTransferETH = usePrepareSendTransaction({
     to: splitter,
     value: rawAmountInput,
-    enabled: writeEnabled,
+    enabled: canTransfer,
   });
 
   const transferETH = useSendTransaction(prepareTransferETH.config);
@@ -96,7 +95,6 @@ export function Deposit({ defaultToken, splitter }: DepositProps) {
       setOpen(false);
       balanceQuery.refetch();
       invalidateCache({
-        chainId,
         address: splitter,
       });
     },
@@ -128,13 +126,14 @@ export function Deposit({ defaultToken, splitter }: DepositProps) {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button className='p h-fit rounded-xl bg-primary'>
-          Deposit {tokenDetails.data?.symbol || ""}
+          <Wallet className='h-4 w-4 mr-2' />
+          Deposit from Wallet
         </Button>
       </DialogTrigger>
       <DialogContent className='px-4'>
         <DialogHeader>
-          <DialogTitle>Select Token</DialogTitle>
-          <DialogDescription>Deposit into this splitter</DialogDescription>
+          <DialogTitle>Deposit {tokenDetails.data?.symbol} </DialogTitle>
+          <DialogDescription>Transfer into this splitter</DialogDescription>
         </DialogHeader>
         <div className='flex flex-col space-y-4'>
           {/* <SelectToken defaultToken={defaultToken} onChange={(token) => {}} /> */}
@@ -161,29 +160,22 @@ export function Deposit({ defaultToken, splitter }: DepositProps) {
                 width={50}
               />
             </div>
-            <div className='flex flex-row justify-between gap-2 text-xs'>
-              <span className='text-gray-500'>
-                Your balance: {balanceQuery.data?.formatted} (
-                <SelectToken
-                  defaultToken={currentTokenAddress}
-                  onChange={setCurrentTokenAddress}
-                  buttonElement={
-                    <a className='text-xs text-primary-foreground hover:underline cursor-pointer'>
-                      Use a different token
-                    </a>
-                  }
-                />
-                )
-              </span>
+            <div className='flex flex-row justify-between gap-2 text-xs text-gray-500'>
+              <span>Your balance: {balanceQuery.data?.formatted} </span>
+              <SelectToken
+                defaultToken={currentTokenAddress}
+                onChange={setCurrentTokenAddress}
+                buttonElement={<a className='text-xs link'>Change token</a>}
+              />
             </div>
           </div>
 
           <Button
-            className='p h-fit rounded-xl bg-primary'
+            className='rounded-xl'
             disabled={disabled}
             onClick={handleDeposit}
           >
-            Deposit
+            {sufficientBalance ? "Deposit" : "Insufficient Balance"}
           </Button>
         </div>
       </DialogContent>

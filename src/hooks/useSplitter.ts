@@ -1,4 +1,4 @@
-import { getSplitter } from "@/app/[chainId]/[splitterAddr]/actions";
+import { getSplitter } from "@/app/[splitterAddr]/actions";
 import { useQuery } from "@tanstack/react-query";
 import { Address } from "viem";
 import { useChainId } from "wagmi";

@@ -73,6 +73,25 @@ export default [
   },
   {
     type: "function",
+    name: "multicall",
+    inputs: [
+      {
+        name: "data",
+        type: "bytes[]",
+        internalType: "bytes[]",
+      },
+    ],
+    outputs: [
+      {
+        name: "results",
+        type: "bytes[]",
+        internalType: "bytes[]",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
     name: "numPayees",
     inputs: [],
     outputs: [
@@ -135,19 +154,6 @@ export default [
       },
     ],
     stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "releaseWithBounty",
-    inputs: [
-      {
-        name: "bountyReceiver",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-    outputs: [],
-    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -260,6 +266,28 @@ export default [
   },
   {
     type: "error",
+    name: "AccoundHasZeroShares",
+    inputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+  },
+  {
+    type: "error",
+    name: "AccountIsZeroAddress",
+    inputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+  },
+  {
+    type: "error",
     name: "AddressEmptyCode",
     inputs: [
       {
@@ -282,6 +310,17 @@ export default [
   },
   {
     type: "error",
+    name: "DuplicateAccount",
+    inputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+  },
+  {
+    type: "error",
     name: "FailedInnerCall",
     inputs: [],
   },
@@ -292,7 +331,27 @@ export default [
   },
   {
     type: "error",
+    name: "NoPayees",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "NoPaymentDue",
+    inputs: [],
+  },
+  {
+    type: "error",
     name: "NotInitializing",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "PayeeShareLengthMismatch",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "ReentrancyGuardReentrantCall",
     inputs: [],
   },
   {

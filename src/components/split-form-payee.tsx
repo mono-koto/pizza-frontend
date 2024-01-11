@@ -1,5 +1,5 @@
 import { XCircle } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
 import { Noop } from "react-hook-form";
 import { useDebounce } from "usehooks-ts";
@@ -8,12 +8,15 @@ import CustomAvatar from "./custom-avatar";
 import { PayeeState } from "./split-form";
 import { isAddress } from "viem";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { useLookupPyUsdTo } from "@/hooks/useLookupPyUsdTo";
+import Link from "next/link";
+import PyusdToContext from "./pyusdto-context";
+import BlockscannerLink from "./blockscanner-link";
 
 interface SplitFormPayeeProps {
   index: number;
   onChange: (index: number, state: PayeeState) => void;
   value: PayeeState;
-  placeholder: string;
   onRemove: Noop;
   total: number;
 }
@@ -36,8 +39,9 @@ export function SplitFormPayee({
 }: SplitFormPayeeProps) {
   const [receiver, setReceiver] = useState<string>(value.address);
   const [portion, setPortion] = useState<number>(value.portion);
-  const debouncedAddress = useDebounce(receiver, 500);
-  const ens = useEns(debouncedAddress);
+  const debouncedInput = useDebounce(receiver, 500);
+  const pyusd = useLookupPyUsdTo(debouncedInput);
+  const ens = useEns(pyusd.data?.address || debouncedInput);
 
   const triggerOnChange = useCallback(
     (payee: PayeeState) => {
@@ -46,15 +50,28 @@ export function SplitFormPayee({
     [index, onChange]
   );
 
+  const pyusdURL =
+    pyusd.data?.kind === "nickname" && `pyusd.to/${pyusd.data.nickname}`;
+  const resolvedAddress = pyusd.data?.address || ens.data.address;
+
   useEffect(() => {
+    const label = pyusdURL ? pyusdURL : receiver;
     triggerOnChange({
-      label: receiver,
-      address: ens.data.address,
+      label,
+      address: resolvedAddress,
       portion,
-      valid: isAddress(ens.data.address),
+      valid: isAddress(resolvedAddress),
       id: value.id,
     });
-  }, [triggerOnChange, receiver, ens.data.address, portion, value.id]);
+  }, [
+    triggerOnChange,
+    pyusdURL,
+    resolvedAddress,
+    receiver,
+    ens.data.address,
+    portion,
+    value.id,
+  ]);
 
   const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setReceiver(event.target.value);
@@ -78,15 +95,31 @@ export function SplitFormPayee({
   );
 
   const [parent] = useAutoAnimate(/* optional config */);
+  const [validationParent] = useAutoAnimate(/* optional config */);
 
-  const validation = (isAddress(receiver) ||
-    (receiver.endsWith(".eth") && ens.data.address)) && (
-    <div className='text-xs text-muted-foreground col-span-11'>
-      {(receiver.length > 0 && receiver.endsWith(".eth")) || !ens.data.name
-        ? `✅ ${ens.data.address} · ${portion} share(s) · ${percentage}`
-        : `✅ ${ens.data.name} · ${portion} share(s) · ${percentage}`}
-    </div>
-  );
+  let validation: React.ReactNode;
+
+  if (isAddress(debouncedInput)) {
+    validation = (
+      <div className='text-xs text-muted-foreground col-span-11'>
+        ✅ {ens.data.name || debouncedInput} · {portion} share(s) · {percentage}
+      </div>
+    );
+  } else if (debouncedInput.endsWith(".eth") && ens.data.address) {
+    validation = (
+      <div className='text-xs text-muted-foreground col-span-11'>
+        ✅ <BlockscannerLink address={ens.data.address} /> · {portion} share(s)
+        · {percentage}
+      </div>
+    );
+  } else if (pyusd.data?.kind === "nickname") {
+    validation = (
+      <PyusdToContext
+        address={pyusd.data.address}
+        nickname={pyusd.data.nickname}
+      />
+    );
+  }
 
   return (
     <div
@@ -106,7 +139,7 @@ export function SplitFormPayee({
           ref={inputRef}
           type='text'
           className='w-full text-left focus:outline-none focus:ring-0 bg-muted p-2 px-2 rounded-md text-sm text-foreground '
-          placeholder='ETH address or ENS'
+          placeholder='ETH address, ENS, or PYUSD.to nickname'
           autoComplete='off'
           autoCorrect='off'
           autoCapitalize='off'
@@ -132,7 +165,12 @@ export function SplitFormPayee({
       >
         <XCircle className='w-4 h-4' />
       </Button>
-      {validation}
+      <div
+        className='text-xs text-muted-foreground col-span-11'
+        ref={validationParent}
+      >
+        {validation}
+      </div>
     </div>
   );
 }

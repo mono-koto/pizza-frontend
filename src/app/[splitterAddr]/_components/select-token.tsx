@@ -25,9 +25,11 @@ import {
 import Image from "next/image";
 import { useState } from "react";
 import { Address, formatUnits, isAddress } from "viem";
-import { useAccount, useChainId } from "wagmi";
+import { useAccount, useBalance, useChainId } from "wagmi";
 import { TokenButton } from "./token-button";
 import { format } from "path";
+import { ETH_ADDRESS } from "@/config/config";
+import { TokenBalanceSuccess } from "alchemy-sdk";
 
 interface TokenSelectProps {
   defaultToken: Address;
@@ -62,7 +64,18 @@ export function SelectToken({
   const chainId = useChainId();
 
   const owner = useAccount();
-  const tokens = useTokenBalances({ address: owner.address });
+  const tokenBalances = useTokenBalances({ address: owner.address });
+
+  const balances = [...(tokenBalances.data?.tokenBalances || [])];
+  const ethBalance = useBalance({
+    address: owner.address,
+  });
+  if (ethBalance.isSuccess && ethBalance.data!.value > 0n) {
+    balances.push({
+      contractAddress: ETH_ADDRESS,
+      tokenBalance: ethBalance.data!.value.toString(),
+    } as TokenBalanceSuccess);
+  }
 
   const [currentToken, setCurrentToken] = useState<Address>(defaultToken);
 
@@ -124,7 +137,7 @@ export function SelectToken({
           <CommandEmpty>No tokens found.</CommandEmpty>
           <CommandList className='w-full overflow-x-clip'>
             <CommandGroup>
-              {tokens.data?.tokenBalances.map((token) => (
+              {balances.map((token) => (
                 <TokenCommandItem
                   key={token.contractAddress}
                   address={token.contractAddress as Address}
@@ -191,7 +204,9 @@ function TokenListDisplay({
       <div className='overflow-ellipsis'>
         <div>{tokenDetails.data?.name}</div>
         <div className='text-sm'>
-          {tokenDetails.data?.symbol} {balance.toString()}
+          {tokenDetails.data?.symbol}{" "}
+          {tokenDetails.data &&
+            formatUnits(balance, tokenDetails.data.decimals)}
         </div>
       </div>
     </div>

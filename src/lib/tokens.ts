@@ -1,6 +1,7 @@
 import { Address } from "viem";
 import getConfig from "./config";
 import { TokenDetails } from "@/models";
+import { ETH_ADDRESS_REGEX } from "@/config/config";
 
 export function symbolAddress(symbol: string, chainId: number) {
   const tokenData = getConfig(chainId).tokens;
@@ -31,4 +32,8 @@ export function orderedTokens(chainId: number) {
   return tokenData.preferredOrder
     .map((symbol) => symbolTokenDetails(symbol, chainId))
     .filter((details) => Boolean(details)) as TokenDetails[];
+}
+
+export function isEthAddress(address: string) {
+  return ETH_ADDRESS_REGEX.test(address);
 }

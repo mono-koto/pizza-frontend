@@ -1,4 +1,4 @@
-import { Network, Alchemy } from "alchemy-sdk";
+import { Alchemy, Network } from "alchemy-sdk";
 
 const API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY as string;
 

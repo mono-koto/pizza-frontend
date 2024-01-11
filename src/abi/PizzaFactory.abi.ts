@@ -29,7 +29,7 @@ export default [
       {
         name: "pizza",
         type: "address",
-        internalType: "contract IPizza",
+        internalType: "address",
       },
     ],
     stateMutability: "nonpayable",
@@ -49,7 +49,7 @@ export default [
         internalType: "uint256[]",
       },
       {
-        name: "_nonce",
+        name: "_salt",
         type: "uint256",
         internalType: "uint256",
       },
@@ -58,7 +58,7 @@ export default [
       {
         name: "pizza",
         type: "address",
-        internalType: "contract IPizza",
+        internalType: "address",
       },
     ],
     stateMutability: "nonpayable",
@@ -97,7 +97,7 @@ export default [
         internalType: "uint256[]",
       },
       {
-        name: "_nonce",
+        name: "_salt",
         type: "uint256",
         internalType: "uint256",
       },
