@@ -3,12 +3,13 @@
 import { UrlKind, useBlockExplorerUrl } from "@/hooks/useBlockExplorerUrl";
 import { shortAddress } from "@/lib/utils";
 import { Copy } from "lucide-react";
-import { CopyToClipboard } from "react-copy-to-clipboard";
 import { toast } from "react-toastify";
 import { Address } from "viem";
 import { useEnsName } from "wagmi";
 import { Button } from "./ui/button";
 import Link from "next/link";
+import { useCopyToClipboard } from "usehooks-ts";
+import { useCallback } from "react";
 
 type Props = {
   address: string;
@@ -29,6 +30,16 @@ export default function BlockscannerLink({
     id: address,
     kind: kind || "address",
   });
+
+  const [copiedText, copy] = useCopyToClipboard();
+
+  const copyToClipboard = useCallback(
+    (content: string) => {
+      copy(content);
+      toast.success("Copied to clipboard");
+    },
+    [copy]
+  );
 
   const ensQuery = useEnsName({
     address: address as Address,
@@ -58,14 +69,14 @@ export default function BlockscannerLink({
   );
 
   const clipboardButton = (
-    <CopyToClipboard
-      text={address}
-      onCopy={() => toast.success("Copied address to clipboard")}
+    <Button
+      size='icon'
+      className='w-3 h-3 mx-1 rounded-sm'
+      variant='ghost'
+      onClick={copyToClipboard.bind(null, address)}
     >
-      <Button size='icon' className='w-3 h-3 mx-1 rounded-sm' variant='ghost'>
-        <Copy className='w-3 h-3' />
-      </Button>
-    </CopyToClipboard>
+      <Copy className='w-3 h-3' />
+    </Button>
   );
 
   return (
