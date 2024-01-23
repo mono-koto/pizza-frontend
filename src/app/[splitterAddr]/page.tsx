@@ -16,6 +16,7 @@ import { TokenBalanceRow } from "./_components/token-balance-row";
 import { getReleasedAndBalances } from "./actions";
 import { ReleaseAll } from "./_components/release-all";
 import useSplitterAssetTransfers from "@/hooks/useSplitterAssetTransfers";
+import getConfig from "@/lib/config";
 
 export default function Splitter(props: {
   params: { splitterAddr: Address; chainId: string };
@@ -51,7 +52,7 @@ export default function Splitter(props: {
       ?.filter((b) => b.balance > 0)
       .map((b) => b.address) || [];
 
-  const defaultToken = symbolAddress("PYUSD", chainId);
+  const defaultToken = getConfig(chainId).preferredToken;
 
   if (!defaultToken) {
     throw new Error("No default token found");

@@ -14,12 +14,13 @@ import {
   useChainId,
   useContractWrite,
   usePrepareContractWrite,
-  usePublicClient,
   useWaitForTransaction,
 } from "wagmi";
 import { DonutChart } from "./donut-chart";
 import { SplitFormPayee, SplitFormPayeeHeader } from "./split-form-payee";
 import TransactionMessage from "./transaction-message";
+import { Switch } from "@/components/ui/switch";
+import { ReleaseBountyOption } from "./release-bounty-option";
 
 export type PayeeState = {
   label?: string;
@@ -170,6 +171,13 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
             />
           ))}
         </div>
+
+        {/* <ReleaseBountyOption
+          enabled
+          onValueChange={console.log}
+          initialValue={0}
+        /> */}
+
         <Button
           onClick={submit}
           className='w-full'
