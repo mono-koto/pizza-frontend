@@ -29,7 +29,7 @@ export default function SplitterListItem(
   }
 
   return (
-    <div className='flex flex-row gap-4 text-xs splitter-list-item border border-border rounded-lg p-4 justify-stretch'>
+    <div className='flex flex-row gap-4 text-xs splitter-list-item border border-border rounded-lg p-4 justify-stretch hover:border-foreground transition-colors'>
       <div className=' self-start flex flex-col justify-center'>
         <SplitterMiniDonutChart address={props.address} />
         <Button

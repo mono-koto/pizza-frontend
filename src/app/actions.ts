@@ -39,6 +39,11 @@ export async function getRecentSplitterCreations({
         throw new Error("No address");
       }
 
+      const creator = event.args.creator;
+      if (!address) {
+        throw new Error("No creator");
+      }
+
       const [
         { payees, shares },
         { balance, totalReleased },

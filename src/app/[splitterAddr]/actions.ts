@@ -3,11 +3,9 @@
 import ERC20ABI from "@/abi/ERC20.abi";
 import PizzaAbi from "@/abi/Pizza.abi";
 import PizzaFactoryAbi from "@/abi/PizzaFactory.abi";
-import { alchemyClient } from "@/lib/alchemy";
 import getConfig from "@/lib/config";
 import { createClient } from "@/lib/viemClient";
 import { CreationInfo, Splitter } from "@/models";
-import { AssetTransfersCategory, SortingOrder } from "alchemy-sdk";
 import { revalidatePath } from "next/cache";
 import { Address } from "viem";
 
@@ -66,11 +64,7 @@ export async function getReleasedAndBalances({
     throw new Error("ETH not in preferred order");
   }
 
-  console.log();
-  console.log(tokenBalances);
   tokenBalances.splice(ethIndex * 2, 0, balance, totalReleased);
-  console.log(tokenBalances);
-  console.log();
   const tokenBalanceStates = tokenAddresses
     .map((address, index) => ({
       address,
@@ -86,7 +80,6 @@ export async function getReleasedAndBalances({
         token.symbol === "ETH"
     );
 
-  console.log(tokenBalanceStates.map((t) => [t.symbol, t.balance]));
   return tokenBalanceStates as {
     address: Address;
     name?: string;
@@ -96,25 +89,6 @@ export async function getReleasedAndBalances({
     balance: bigint;
   }[];
 }
-
-// export const tokenPrice = async ({ address }: { address: Address }) => {
-//   const apiKey = "YOUR_API_KEY"; // Replace with your CoinMarketCap API key
-//   const apiUrl = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${address}&convert=USD`;
-
-//   try {
-//     const response = await axios.get(apiUrl, {
-//       headers: {
-//         "X-CMC_PRO_API_KEY": apiKey,
-//       },
-//     });
-
-//     const price = response.data.data[address].quote.USD.price;
-//     return price;
-//   } catch (error) {
-//     console.error("Error fetching token price:", error);
-//     return null;
-//   }
-// };
 
 export async function getSplitterState({
   chainId,

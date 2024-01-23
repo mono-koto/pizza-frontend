@@ -10,7 +10,7 @@ export const PYUSD_ADDRESS = "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8";
 export const alchemyKey = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY as string;
 
 export const mainnetConfig = {
-  factoryAddress: "0x003722fBd9F70b4d022948104E1eE5E997687BD9" as Address,
+  factoryAddress: "0x05385dE2A9eC5c6D3A63B82e7611934918e623D8" as Address,
   preferredToken: PYUSD_ADDRESS as Address, // PYUSD
   tokens: tokendata["1"],
 };
@@ -23,7 +23,7 @@ export const sepoliaConfig = {
 
 export const localhostConfig = {
   ...mainnetConfig,
-  factoryAddress: "0x3291d9c24B98427BF554f749564e441F9ED1ce02" as Address,
+  factoryAddress: "0x05385dE2A9eC5c6D3A63B82e7611934918e623D8" as Address,
 };
 
 export const chainConfig = {

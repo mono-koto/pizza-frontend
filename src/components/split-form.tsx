@@ -21,22 +21,6 @@ import { DonutChart } from "./donut-chart";
 import { SplitFormPayee, SplitFormPayeeHeader } from "./split-form-payee";
 import TransactionMessage from "./transaction-message";
 
-// Rest of the code...
-
-const SPLITTER_CREATED_EVENT_SIGNATURE = getEventSignature({
-  type: "event",
-  name: "PizzaCreated",
-  inputs: [
-    {
-      name: "pizza",
-      type: "address",
-      indexed: true,
-      internalType: "address",
-    },
-  ],
-  anonymous: false,
-});
-
 export type PayeeState = {
   label?: string;
   address: string;
@@ -95,8 +79,6 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
       toast("Initiating transaction...");
     },
 
-    onSuccess: async (data, variables, context) => {},
-
     onError: (data) => {
       data.message.match("User rejected")
         ? toast.warn("Transaction cancelled")
@@ -111,7 +93,7 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
     onSuccess: (data) => {
       toast.success(
         <TransactionMessage transactionHash={data.blockHash}>
-          🎉 Transaction success!
+          🎉 Transaction success! Redirecting...
         </TransactionMessage>
       );
 
@@ -127,7 +109,7 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
             return;
           }
         } catch (e) {
-          console.error(e);
+          console.debug("Failed to decode log", e);
         }
       }
       console.error("Expected log not found");

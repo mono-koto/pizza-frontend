@@ -10,7 +10,20 @@ export default [
   },
   {
     type: "function",
-    name: "BIPS_PRECISION",
+    name: "BOUNTY_PRECISION",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "bounty",
     inputs: [],
     outputs: [
       {
@@ -29,6 +42,24 @@ export default [
         name: "token",
         type: "address",
         internalType: "contract IERC20",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "erc20Release",
+    inputs: [
+      {
+        name: "token",
+        type: "address",
+        internalType: "contract IERC20",
+      },
+      {
+        name: "_bountyReceiver",
+        type: "address",
+        internalType: "address",
       },
     ],
     outputs: [],
@@ -66,6 +97,44 @@ export default [
         name: "_shares",
         type: "uint256[]",
         internalType: "uint256[]",
+      },
+      {
+        name: "_bounty",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "initializeWithBountyRelease",
+    inputs: [
+      {
+        name: "_payees",
+        type: "address[]",
+        internalType: "address[]",
+      },
+      {
+        name: "_shares",
+        type: "uint256[]",
+        internalType: "uint256[]",
+      },
+      {
+        name: "_bounty",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "_bountyTokens",
+        type: "address[]",
+        internalType: "address[]",
+      },
+      {
+        name: "_bountyReceiver",
+        type: "address",
+        internalType: "address",
       },
     ],
     outputs: [],
@@ -138,22 +207,22 @@ export default [
   {
     type: "function",
     name: "release",
-    inputs: [],
+    inputs: [
+      {
+        name: "_bountyReceiver",
+        type: "address",
+        internalType: "address",
+      },
+    ],
     outputs: [],
     stateMutability: "nonpayable",
   },
   {
     type: "function",
-    name: "releaseBountyBIPS",
+    name: "release",
     inputs: [],
-    outputs: [
-      {
-        name: "",
-        type: "uint32",
-        internalType: "uint32",
-      },
-    ],
-    stateMutability: "view",
+    outputs: [],
+    stateMutability: "nonpayable",
   },
   {
     type: "function",
@@ -234,6 +303,50 @@ export default [
   },
   {
     type: "event",
+    name: "PayBounty",
+    inputs: [
+      {
+        name: "receiver",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "PayERC20Bounty",
+    inputs: [
+      {
+        name: "token",
+        type: "address",
+        indexed: true,
+        internalType: "contract IERC20",
+      },
+      {
+        name: "receiver",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
     name: "PaymentReceived",
     inputs: [
       {
@@ -266,28 +379,6 @@ export default [
   },
   {
     type: "error",
-    name: "AccoundHasZeroShares",
-    inputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-  },
-  {
-    type: "error",
-    name: "AccountIsZeroAddress",
-    inputs: [
-      {
-        name: "",
-        type: "address",
-        internalType: "address",
-      },
-    ],
-  },
-  {
-    type: "error",
     name: "AddressEmptyCode",
     inputs: [
       {
@@ -310,7 +401,7 @@ export default [
   },
   {
     type: "error",
-    name: "DuplicateAccount",
+    name: "DuplicatePayee",
     inputs: [
       {
         name: "",
@@ -322,6 +413,11 @@ export default [
   {
     type: "error",
     name: "FailedInnerCall",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "InvalidBounty",
     inputs: [],
   },
   {
@@ -346,8 +442,30 @@ export default [
   },
   {
     type: "error",
+    name: "NullPayee",
+    inputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+  },
+  {
+    type: "error",
     name: "PayeeShareLengthMismatch",
     inputs: [],
+  },
+  {
+    type: "error",
+    name: "PayeedHasZeroShares",
+    inputs: [
+      {
+        name: "",
+        type: "address",
+        internalType: "address",
+      },
+    ],
   },
   {
     type: "error",

@@ -44,7 +44,7 @@ export default function Splitter(props: {
     address: splitterAddr,
   });
 
-  console.log(transfers);
+  // console.log(transfers);
 
   const releasable =
     releasedAndBalances.data

@@ -25,7 +25,7 @@ export function SplitFormPayeeHeader() {
   return (
     <div className='rounded-xl border-transparent border px-5 grid grid-cols-12 text-xs gap-x-3'>
       <span className='col-span-9 ml-1'>Recipient</span>
-      <span className='col-span-2 text-center'>Portion</span>
+      <span className='col-span-2 text-center'>Shares</span>
     </div>
   );
 }

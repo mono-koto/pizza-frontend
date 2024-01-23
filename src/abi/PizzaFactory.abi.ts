@@ -36,7 +36,7 @@ export default [
   },
   {
     type: "function",
-    name: "createDeterministic",
+    name: "create",
     inputs: [
       {
         name: "_payees",
@@ -65,19 +65,57 @@ export default [
   },
   {
     type: "function",
-    name: "pizzas",
+    name: "createAndRelease",
     inputs: [
       {
-        name: "",
+        name: "_payees",
+        type: "address[]",
+        internalType: "address[]",
+      },
+      {
+        name: "_shares",
+        type: "uint256[]",
+        internalType: "uint256[]",
+      },
+      {
+        name: "_salt",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "_bounty",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "_bountyTokens",
+        type: "address[]",
+        internalType: "address[]",
+      },
+      {
+        name: "_bountyReceiver",
         type: "address",
         internalType: "address",
       },
     ],
     outputs: [
       {
+        name: "pizza",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "implementation",
+    inputs: [],
+    outputs: [
+      {
         name: "",
-        type: "bool",
-        internalType: "bool",
+        type: "address",
+        internalType: "address",
       },
     ],
     stateMutability: "view",
@@ -95,6 +133,11 @@ export default [
         name: "_shares",
         type: "uint256[]",
         internalType: "uint256[]",
+      },
+      {
+        name: "_bounty",
+        type: "uint256",
+        internalType: "uint256",
       },
       {
         name: "_salt",
@@ -117,6 +160,12 @@ export default [
     inputs: [
       {
         name: "pizza",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "creator",
         type: "address",
         indexed: true,
         internalType: "address",
