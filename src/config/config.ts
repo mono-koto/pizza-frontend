@@ -16,7 +16,7 @@ export const mainnetConfig = {
 };
 
 export const sepoliaConfig = {
-  factoryAddress: "0x003722fBd9F70b4d022948104E1eE5E997687BD9" as Address,
+  factoryAddress: "0xd3b53B180b53f754790A06C8F8FdDAf0A09F28C2" as Address,
   preferredToken: "0x45df5e83b9400421cb3b262b31ee7236b61219d5" as Address, // USDC
   tokens: tokendata["11155111"],
 };
