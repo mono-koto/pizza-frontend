@@ -4,7 +4,7 @@ import { getRecentSplitterCreations } from "@/app/actions";
 import { useQuery } from "@tanstack/react-query";
 import { useChainId, usePublicClient } from "wagmi";
 import SplitterListItem from "./splitter-list-item";
-import { PYUSD_ADDRESS } from "@/config/config";
+import getConfig from "@/lib/config";
 
 export default function RecentSplitters() {
   const client = usePublicClient();
@@ -15,7 +15,7 @@ export default function RecentSplitters() {
     queryFn: () =>
       getRecentSplitterCreations({
         chainId: chainId,
-        token: PYUSD_ADDRESS,
+        token: getConfig(chainId).preferredToken,
       }),
   });
 

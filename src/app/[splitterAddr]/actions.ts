@@ -180,7 +180,7 @@ export async function getSplitterCreation({
     abi: PizzaFactoryAbi,
     eventName: "PizzaCreated",
     args: { pizza: address },
-    fromBlock: 18830000n,
+    fromBlock: getConfig(chainId).startBlock,
   });
 
   const events = await client.getFilterLogs({ filter });

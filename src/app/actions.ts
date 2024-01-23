@@ -25,7 +25,7 @@ export async function getRecentSplitterCreations({
     address: getConfig(chainId).factoryAddress,
     abi: PizzaFactoryAbi,
     eventName: "PizzaCreated",
-    fromBlock: 18830000n,
+    fromBlock: getConfig(chainId).startBlock,
   });
 
   const events = (await client.getFilterLogs({ filter }))

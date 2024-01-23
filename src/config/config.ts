@@ -13,12 +13,14 @@ export const mainnetConfig = {
   factoryAddress: "0x05385dE2A9eC5c6D3A63B82e7611934918e623D8" as Address,
   preferredToken: PYUSD_ADDRESS as Address, // PYUSD
   tokens: tokendata["1"],
+  startBlock: 18830000n,
 };
 
 export const sepoliaConfig = {
   factoryAddress: "0xd3b53B180b53f754790A06C8F8FdDAf0A09F28C2" as Address,
   preferredToken: "0x45df5e83b9400421cb3b262b31ee7236b61219d5" as Address, // USDC
   tokens: tokendata["11155111"],
+  startBlock: 5141429n,
 };
 
 export const localhostConfig = {
