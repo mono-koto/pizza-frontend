@@ -29,7 +29,7 @@ export default function Home() {
           <Link href='https://PYUSD.to/'>PYUSD.to</Link>.
         </p>
 
-        <p>Let's dig in!</p>
+        <p>Let&apos;s dig in!</p>
         <p>
           <Link href='/new' prefetch passHref>
             <Button size='lg' className='text-xl uppercase px-4'>
