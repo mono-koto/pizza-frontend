@@ -26,6 +26,10 @@ module.exports = {
         protocol: "https",
         hostname: "tokens.1inch.io",
       },
+      {
+        protocol: "https",
+        hostname: "www.paypalobjects.com",
+      },
     ],
   },
 };

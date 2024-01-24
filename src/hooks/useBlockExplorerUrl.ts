@@ -16,11 +16,16 @@ type Options = {
 export const useBlockExplorerUrl = ({ id, kind }: Options) => {
   const chain = usePublicClient().chain;
 
+  const path = kind === "contract" ? "address" : kind;
+  const fragment = kind === "contract" ? "#code" : undefined;
+
   const blockExplorer =
     chain === localhost
       ? mainnet.blockExplorers.default
       : chain?.blockExplorers?.default;
-  const url = blockExplorer ? `${blockExplorer.url}/${kind}/${id}` : undefined;
+  const url = blockExplorer
+    ? `${blockExplorer.url}/${path}/${id}${fragment}`
+    : undefined;
   return {
     blockExplorer,
     url: url,
