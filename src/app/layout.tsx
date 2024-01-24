@@ -12,7 +12,30 @@ const fontSans = FontSans({
 });
 export const metadata: Metadata = {
   title: "PYUSD.pizza",
-  description: "Split your PYUSD",
+  description: "Split your PYUSD (or ETH or ERC-20s)",
+  applicationName: "PYUSD.pizza",
+  authors: [
+    {
+      name: "Mono Koto",
+      url: "https://mono-koto.com/",
+    },
+    {
+      name: "Garden Labs",
+      url: "https://gardenlabs.xyz/",
+    },
+  ],
+  creator: "Mono Koto",
+  keywords: [
+    "PYUSD",
+    "PayPal",
+    "Ethereum",
+    "Crypto",
+    "Web3",
+    "Payment",
+    "Uniswap",
+    "Splitter",
+    "Open Source",
+  ],
 };
 
 export default function RootLayout({
