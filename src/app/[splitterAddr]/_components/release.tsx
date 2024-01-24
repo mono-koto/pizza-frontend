@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ETH_ADDRESS } from "@/config/config";
 import { isEthAddress } from "@/lib/tokens";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Address } from "viem";
 import {
   useBalance,
@@ -12,6 +13,7 @@ import {
   usePrepareContractWrite,
   useWaitForTransaction,
 } from "wagmi";
+import { invalidateCache } from "../actions";
 
 interface ReleaseProps {
   splitter: Address;
@@ -20,6 +22,8 @@ interface ReleaseProps {
 
 export function Release({ splitter, releaseToken }: ReleaseProps) {
   const isNative = releaseToken === undefined || isEthAddress(releaseToken);
+
+  const router = useRouter();
 
   const balance = useBalance({
     token: isNative ? undefined : releaseToken!,
@@ -47,8 +51,10 @@ export function Release({ splitter, releaseToken }: ReleaseProps) {
 
   useWaitForTransaction({
     hash: release.data?.hash,
-    onSuccess: () => {
+    onSuccess: async () => {
       release.reset();
+      await invalidateCache({ address: splitter });
+      router.refresh();
     },
   });
 

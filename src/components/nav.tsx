@@ -21,7 +21,9 @@ export default function Nav(props: React.HTMLProps<HTMLDivElement>) {
           </Link>
         </div>
         <div className='flex-grow font-bold text-inherit text-xl'>
-          <Link href='/'>SPLIT.PIZZA</Link>
+          <Link href='/' className='uppercase'>
+            pyusd.pizza
+          </Link>
         </div>
         <div className='min-h-12'>
           <ConnectButton label='Connect' />
