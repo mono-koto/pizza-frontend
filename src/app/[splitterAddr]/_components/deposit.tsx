@@ -50,7 +50,6 @@ export function Deposit({ defaultToken, splitter }: DepositProps) {
   const handleAmountInputChange = (event: any) => {
     setAmountInput(event.target.value);
   };
-  const inputDisabled = !tokenDetails.data;
 
   const account = useAccount();
   const balanceQuery = useBalance({
@@ -88,8 +87,9 @@ export function Deposit({ defaultToken, splitter }: DepositProps) {
 
   const transferETH = useSendTransaction(prepareTransferETH.config);
 
-  useWaitForTransaction({
+  const waitForTxn = useWaitForTransaction({
     hash: transfer.data?.hash || transferETH.data?.hash,
+
     onSuccess: () => {
       toast.success("Deposit successful");
       setOpen(false);
@@ -111,9 +111,13 @@ export function Deposit({ defaultToken, splitter }: DepositProps) {
     }
   }, [transfer, transferETH, tokenDetails.data?.isNative]);
 
+  const transactionIsPending = waitForTxn.isFetching;
+
   const disabled = tokenDetails.data?.isNative
     ? !prepareTransferETH.isSuccess
     : !prepareTransfer.isSuccess;
+
+  const inputDisabled = !tokenDetails.data || transactionIsPending;
 
   const handleOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
@@ -172,10 +176,14 @@ export function Deposit({ defaultToken, splitter }: DepositProps) {
 
           <Button
             className='rounded-xl'
-            disabled={disabled}
+            disabled={disabled || transactionIsPending}
             onClick={handleDeposit}
           >
-            {sufficientBalance ? "Deposit" : "Insufficient Balance"}
+            {transactionIsPending
+              ? "Processing..."
+              : sufficientBalance
+              ? "Deposit"
+              : "Insufficient Balance"}
           </Button>
         </div>
       </DialogContent>

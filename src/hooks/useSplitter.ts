@@ -14,5 +14,6 @@ export const useSplitter = ({ address }: { address: Address }) => {
         chainId,
       });
     },
+    retry: false,
   });
 };

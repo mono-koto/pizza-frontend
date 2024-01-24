@@ -11,7 +11,7 @@ const fontSans = FontSans({
   variable: "--font-sans",
 });
 export const metadata: Metadata = {
-  title: "split.pizza",
+  title: "PYUSD.pizza",
   description: "Split your PYUSD",
 };
 
