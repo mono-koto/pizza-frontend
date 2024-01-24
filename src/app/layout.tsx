@@ -24,6 +24,7 @@ export const metadata: Metadata = {
       url: "https://gardenlabs.xyz/",
     },
   ],
+  metadataBase: new URL("https://pyusd.pizza"),
   creator: "Mono Koto",
   keywords: [
     "PYUSD",

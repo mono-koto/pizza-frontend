@@ -10,7 +10,7 @@ import { revalidatePath } from "next/cache";
 import { Address } from "viem";
 
 export async function invalidateCache({ address }: { address: Address }) {
-  revalidatePath(`/${address}`);
+  revalidatePath(`/`);
 }
 
 export async function getReleasedAndBalances({
