@@ -12,8 +12,6 @@ import {
 
 type SplitterCreation = Splitter & SplitterAssetState & CreationInfo;
 
-export const revalidate = 60; // revalidate at most every minute
-
 export async function getRecentSplitterCreations({
   chainId,
   token,

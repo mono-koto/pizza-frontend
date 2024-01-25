@@ -4,7 +4,7 @@ import { Pizza } from "lucide-react";
 
 import Link from "next/link";
 
-export const revalidate = 60; // revalidate at least every minute
+export const revalidate = 60; // revalidate at most every minute
 
 export default function Home() {
   return (
