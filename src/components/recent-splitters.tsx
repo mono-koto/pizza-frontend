@@ -1,23 +1,10 @@
 "use client";
 
-import { getRecentSplitterCreations } from "@/app/actions";
-import { useQuery } from "@tanstack/react-query";
-import { useChainId, usePublicClient } from "wagmi";
+import { useRecentSplitters } from "@/hooks/useRecentSplitters";
 import SplitterListItem from "./splitter-list-item";
-import getConfig from "@/lib/config";
 
 export default function RecentSplitters() {
-  const client = usePublicClient();
-  const chainId = useChainId();
-
-  const splitterCreationsQuery = useQuery({
-    queryKey: [chainId, "recent-splitters"],
-    queryFn: () =>
-      getRecentSplitterCreations({
-        chainId: chainId,
-        token: getConfig(chainId).preferredToken,
-      }),
-  });
+  const splitterCreationsQuery = useRecentSplitters();
 
   return (
     <div className='flex flex-col gap-4'>

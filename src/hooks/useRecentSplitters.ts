@@ -1,31 +1,41 @@
-"use server";
-
 import PizzaFactoryAbi from "@/abi/PizzaFactory.abi";
-import getConfig from "@/lib/config";
-import { createClient } from "@/lib/viemClient";
-import { CreationInfo, Splitter, SplitterAssetState } from "@/models";
-import { Address } from "viem";
 import {
   getSplitterPayeesShares,
   getSplitterState,
-} from "./[splitterAddr]/actions";
+} from "@/app/[splitterAddr]/actions";
+import getConfig from "@/lib/config";
+import { CreationInfo, Splitter, SplitterAssetState } from "@/models";
+import { useQuery } from "@tanstack/react-query";
+import { Address } from "viem";
+import { PublicClient, usePublicClient } from "wagmi";
 
 type SplitterCreation = Splitter & SplitterAssetState & CreationInfo;
 
-export async function getRecentSplitterCreations({
-  chainId,
-  token,
-}: {
-  chainId: number;
-  token?: Address;
-}): Promise<SplitterCreation[]> {
-  const client = createClient(chainId);
+export function useRecentSplitters({ token }: { token?: Address } = {}) {
+  const client = usePublicClient();
+  return useQuery({
+    queryKey: ["getRecentSplitters", token, client.chain.id],
+    queryFn: async () => {
+      return getRecentSplitterCreations({
+        token,
+        client,
+      });
+    },
+  });
+}
 
+async function getRecentSplitterCreations({
+  token,
+  client,
+}: {
+  token?: Address;
+  client: PublicClient;
+}): Promise<SplitterCreation[]> {
   const filter = await client.createContractEventFilter({
-    address: getConfig(chainId).factoryAddress,
+    address: getConfig(client.chain.id).factoryAddress,
     abi: PizzaFactoryAbi,
     eventName: "PizzaCreated",
-    fromBlock: getConfig(chainId).startBlock,
+    fromBlock: getConfig(client.chain.id).startBlock,
   });
 
   const events = (await client.getFilterLogs({ filter }))
@@ -51,11 +61,11 @@ export async function getRecentSplitterCreations({
         txnReceipt,
       ] = await Promise.all([
         getSplitterPayeesShares({
-          chainId,
+          chainId: client.chain.id,
           address,
         }),
         getSplitterState({
-          chainId,
+          chainId: client.chain.id,
           address,
           token,
         }),
