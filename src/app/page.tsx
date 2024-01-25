@@ -15,18 +15,7 @@ export default function Home() {
         </p>
         <p>
           When someone sends PYUSD or ETH or any other tokens to a splitter, the
-          value can only release only according to the portions you&apos;ve
-          predefined.
-        </p>
-        <p>
-          Of course, some great{" "}
-          <Link href='https://docs.openzeppelin.com/contracts/4.x/api/finance#PaymentSplitter'>
-            Payment
-          </Link>{" "}
-          <Link href='https://splits.org/'>Splitters</Link> already exist! But
-          the Split.Pizza dApp is designed for small recipient groups, prefers
-          (but is not limited to!) PYUSD, and has a fun UI that integrates with{" "}
-          <Link href='https://PYUSD.to/'>PYUSD.to</Link>.
+          value can only release according to the predefined portions.
         </p>
 
         <p>Let&apos;s dig in!</p>

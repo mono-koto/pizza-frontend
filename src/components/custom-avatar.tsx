@@ -5,10 +5,21 @@ import Image from "next/image";
 import { useState } from "react";
 import { isAddress } from "viem";
 import { UserRound } from "lucide-react";
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "./ui/tooltip";
+import BlockscannerLink from "./blockscanner-link";
+import { useEns } from "@/hooks/useEns";
+import { useBlockExplorerUrl } from "@/hooks/useBlockExplorerUrl";
+import Link from "next/link";
 
 interface CustomAvatarProps extends React.HTMLProps<HTMLDivElement> {
   className?: string;
   address?: string;
+  tooltip?: boolean;
   ensImage?: string | null;
   size?: number;
 }
@@ -16,6 +27,7 @@ interface CustomAvatarProps extends React.HTMLProps<HTMLDivElement> {
 export default function CustomAvatar({
   size,
   className,
+  tooltip,
   ensImage,
   address,
   ...remainingProps
@@ -24,9 +36,15 @@ export default function CustomAvatar({
   size = size || 40;
   const [useFallback, setUseFallback] = useState(false);
 
+  const ens = useEns(address);
+
+  const { url } = useBlockExplorerUrl({
+    id: address,
+    kind: "address",
+  });
+
   function Img() {
     if (!address || !isAddress(address)) {
-      // console.log("[CustomAvatar] invalid address generic avatar:", address);
       return (
         <div className='w-full aspect-square bg-muted rounded-full flex justify-center  items-center text-muted-foreground '>
           <UserRound className='w-4 h-4 -translate-y-[1px]' />
@@ -52,7 +70,7 @@ export default function CustomAvatar({
     }
   }
 
-  return (
+  const node = (
     <div
       className={cn("overflow-clip rounded-full aspect-square", className)}
       {...remainingProps}
@@ -64,4 +82,27 @@ export default function CustomAvatar({
       <Img />
     </div>
   );
+
+  if (tooltip) {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            {url ? <Link href={url}>{node}</Link> : node}
+          </TooltipTrigger>
+          <TooltipContent>
+            {address ? (
+              <BlockscannerLink address={address}>
+                {ens.data.name || address}
+              </BlockscannerLink>
+            ) : (
+              address
+            )}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  } else {
+    return node;
+  }
 }

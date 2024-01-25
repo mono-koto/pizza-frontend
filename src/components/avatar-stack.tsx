@@ -15,6 +15,7 @@ export default function AvatarStack({
           <CustomAvatar
             key={p}
             address={p}
+            tooltip
             className={"inline-block grow-0"}
             style={{
               width: `${size}px`,

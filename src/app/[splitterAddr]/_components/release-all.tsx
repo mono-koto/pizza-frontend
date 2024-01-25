@@ -42,50 +42,10 @@ export function ReleaseAll({ splitter, tokens }: ReleaseProps) {
     release.write?.();
   };
 
-  // const isNative = releaseToken === undefined || isEthAddress(releaseToken);
-
-  // const balance = useBalance({
-  //   token: isNative ? undefined : releaseToken!,
-  //   address: splitter,
-  // });
-
-  // console.log(releaseToken, balance.data?.formatted);
-
-  // const prepareReleaseETH = usePrepareContractWrite({
-  //   abi: PizzaAbi,
-  //   address: splitter,
-  //   functionName: "release",
-  //   enabled: isNative,
-  // });
-
-  // const prepareReleaseERC20 = usePrepareContractWrite({
-  //   abi: PizzaAbi,
-  //   address: splitter,
-  //   functionName: "erc20Release",
-  //   args: [releaseToken!],
-  //   enabled: !isNative,
-  // });
-
-  // const prepareRelease = isNative ? prepareReleaseETH : prepareReleaseERC20;
-
-  // const release = useContractWrite(prepareRelease.config);
-
-  // useWaitForTransaction({
-  //   hash: release.data?.hash,
-  //   onSuccess: () => {
-  //     release.reset();
-  //   },
-  // });
-
-  // const handleRelease = async () => {
-  //   release.write?.();
-  // };
-
-  // console.log(releaseToken, ETH_ADDRESS);
-
   return (
     <Button
       className='rounded-xl'
+      variant={prepareRelease.isSuccess ? "default" : "outline"}
       onClick={handleRelease}
       disabled={!prepareRelease.isSuccess || release.isLoading}
     >

@@ -129,9 +129,9 @@ export function Deposit({ defaultToken, splitter }: DepositProps) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className='p h-fit rounded-xl bg-primary'>
+        <Button className='rounded-xl' variant='outline'>
           <Wallet className='h-4 w-4 mr-2' />
-          Deposit from Wallet
+          Deposit
         </Button>
       </DialogTrigger>
       <DialogContent className='px-4'>

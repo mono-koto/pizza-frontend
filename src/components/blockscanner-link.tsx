@@ -55,6 +55,8 @@ export default function BlockscannerLink({
     displayName = shortAddress(address);
   }
 
+  console.log(displayName, ensQuery.data);
+
   const content = url ? (
     <Link
       target='_blank'

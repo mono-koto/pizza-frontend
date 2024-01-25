@@ -3,6 +3,7 @@ import { formatTokenAmount } from "@/lib/utils";
 import Image from "next/image";
 import { release } from "os";
 import { Address } from "viem";
+import { TokenImg } from "./token-img";
 
 type TokenBalance = {
   name?: string;
@@ -28,19 +29,7 @@ export const TokenBalanceRow = ({
   return (
     <div className='flex flex-row items-baseline gap-2'>
       <div className='w-fit h-fit grow-0 self-center justify-self-center'>
-        {token.logoURI ? (
-          <Image
-            className=''
-            src={token.logoURI}
-            width={SIZE}
-            height={SIZE}
-            alt={token.symbol || token.name || token.address}
-          />
-        ) : (
-          <div
-            className={`w-[${SIZE}px] h-[${SIZE}px] rounded-full bg-gray-200`}
-          ></div>
-        )}
+        <TokenImg address={token.address} />
       </div>
       <div>{token.symbol}</div>
       <div className='grow text-right'>
