@@ -4,6 +4,8 @@ import { Pizza } from "lucide-react";
 
 import Link from "next/link";
 
+export const revalidate = 60; // revalidate at least every minute
+
 export default function Home() {
   return (
     <div className='flex flex-col md:flex-row gap-6 '>

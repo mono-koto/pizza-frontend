@@ -172,12 +172,6 @@ const SplitForm: React.FC<SplitFormProps> = ({}) => {
           ))}
         </div>
 
-        {/* <ReleaseBountyOption
-          enabled
-          onValueChange={console.log}
-          initialValue={0}
-        /> */}
-
         <Button
           onClick={submit}
           className='w-full'

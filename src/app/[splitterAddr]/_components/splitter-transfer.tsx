@@ -11,8 +11,6 @@ import { useBlock } from "@/hooks/useBlock";
 import { Badge } from "@/components/ui/badge";
 import moment from "moment";
 
-export const revalidate = 60; // revalidate at most every minute
-
 export function SplitterTransferHeader() {
   return (
     <>
@@ -52,9 +50,11 @@ export default function SplitterTransferRow({
       </div>
       <div className='text-right'>
         <div className='flex flex-row gap-2'>
-          {transfer.value} {transfer.asset}
+          <div>
+            {transfer.value} {transfer.asset}
+          </div>
           <TokenImg
-            size={16}
+            size={24}
             address={transfer.rawContract.address as Address | undefined}
           />
         </div>

@@ -8,11 +8,11 @@ import CustomAvatar from "./custom-avatar";
 import { DonutChart } from "./donut-chart";
 import { Button } from "./ui/button";
 import SplitterMiniDonutChart from "./splitter-mini-donut-chart";
+import { useRouter } from "next/navigation";
 
 export default function SplitterListItem(
   props: Splitter & SplitterAssetState & CreationInfo
 ) {
-  const chainId = useChainId();
   const tokenQuery = useToken({
     address: props.token,
   });
@@ -28,10 +28,14 @@ export default function SplitterListItem(
     symbol = tokenQuery.data.symbol;
   }
 
+  const router = useRouter();
   return (
-    <div className='flex flex-row gap-4 text-xs splitter-list-item border border-border rounded-lg p-4 justify-stretch hover:border-foreground transition-colors'>
+    <div className='flex flex-row gap-4 text-xs splitter-list-item border border-border rounded-lg p-4 justify-stretch hover:border-foreground transition-colors cursor-pointer'>
       <div className=' self-start flex flex-col justify-center'>
-        <SplitterMiniDonutChart address={props.address} />
+        <div onClick={() => router.push(`/${props.address}`)}>
+          <SplitterMiniDonutChart address={props.address} />
+        </div>
+
         <Button
           asChild
           size='sm'

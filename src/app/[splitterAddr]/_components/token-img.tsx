@@ -23,13 +23,15 @@ export const TokenImg = ({
         src={token.data?.logo}
         width={size}
         height={size}
+        style={{ width: size, height: size }}
         alt={token.data?.symbol || token.data?.name || address || "ETH"}
       />
     );
   } else {
     return (
       <div
-        className={`w-[${size}px] h-[${size}px] rounded-full bg-gray-200`}
+        className={`rounded-full bg-gray-200`}
+        style={{ width: size, height: size }}
       ></div>
     );
   }

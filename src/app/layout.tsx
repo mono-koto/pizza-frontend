@@ -55,7 +55,7 @@ export default function RootLayout({
         <Providers>
           <div className='flex flex-col min-h-screen justify-stretch gap-4 p-3 md:p-6 mx-auto container max-w-6xl'>
             <Nav />
-            <main className='mt-8 flex-1'>{children}</main>
+            <main className='my-8 flex-1'>{children}</main>
             <Footer />
           </div>
         </Providers>
