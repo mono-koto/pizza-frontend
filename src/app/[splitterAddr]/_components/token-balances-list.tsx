@@ -8,8 +8,6 @@ import { Fragment } from "react";
 import { TokenBalanceRow } from "./token-balance-row";
 import useTokensForOwner from "@/hooks/useTokensForOwner";
 
-export const revalidate = 60; // revalidate at most every minute
-
 export default function TokenBalancesList({ address }: { address: Address }) {
   if (!isAddress(address)) {
     notFound();

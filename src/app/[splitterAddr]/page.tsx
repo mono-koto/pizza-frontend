@@ -4,7 +4,7 @@ import { Metadata, ResolvingMetadata } from "next/types";
 import { Address, isAddress } from "viem";
 import Splitter from "./_components/splitter-component";
 
-export const revalidate = 60; // revalidate at least every minute
+export const revalidate = 60; // revalidate at most every minute
 
 interface SplitterPageProps {
   params: {

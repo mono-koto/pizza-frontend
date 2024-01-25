@@ -6,8 +6,6 @@ import useSplitterAssetTransfers from "@/hooks/useSplitterAssetTransfers";
 import SplitterTransfer, { SplitterTransferHeader } from "./splitter-transfer";
 import SplitterTransferRow from "./splitter-transfer";
 
-export const revalidate = 60; // revalidate at most every minute
-
 export default function SplitterTransfers({ address }: { address: Address }) {
   const assetTransfers = useSplitterAssetTransfers({ address });
 
