@@ -29,9 +29,11 @@ import {
   useWaitForTransaction,
 } from "wagmi";
 
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertTriangle, Wallet } from "lucide-react";
 import { invalidateCache } from "../actions";
 import { SelectToken } from "./select-token";
-import { Wallet } from "lucide-react";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 interface DepositProps {
   defaultToken: Address;
@@ -39,9 +41,9 @@ interface DepositProps {
 }
 
 export function Deposit({ defaultToken, splitter }: DepositProps) {
-  const chainId = useChainId();
   const [open, setOpen] = useState(false);
   const [amountInput, setAmountInput] = useState("");
+  const [parent] = useAutoAnimate();
 
   const [currentTokenAddress, setCurrentTokenAddress] =
     useState<Address>(defaultToken);
@@ -139,9 +141,7 @@ export function Deposit({ defaultToken, splitter }: DepositProps) {
           <DialogTitle>Deposit {tokenDetails.data?.symbol} </DialogTitle>
           <DialogDescription>Transfer into this splitter</DialogDescription>
         </DialogHeader>
-        <div className='flex flex-col space-y-4'>
-          {/* <SelectToken defaultToken={defaultToken} onChange={(token) => {}} /> */}
-
+        <div className='flex flex-col space-y-4' ref={parent}>
           <div className='border-gray flex flex-col rounded-xl border p-2'>
             <div className='flex flex-row items-center justify-between'>
               <div className='flex-1'>
@@ -173,6 +173,25 @@ export function Deposit({ defaultToken, splitter }: DepositProps) {
               />
             </div>
           </div>
+
+          {defaultToken.toLowerCase() !== currentTokenAddress.toLowerCase() && (
+            <Alert>
+              <AlertTriangle className='h-4 w-4' color='#ff6600' />
+              <AlertTitle>
+                <h4>
+                  {tokenDetails.data?.symbol || "That token"} is great and
+                  all&hellip;
+                </h4>
+              </AlertTitle>
+              <AlertDescription>
+                <p className='text-xs'>
+                  But heads up that if any payees are PayPal/Venmo PYUSD
+                  receiving addresses, they will not be able to access{" "}
+                  {tokenDetails.data?.symbol || "these"} funds released to them.
+                </p>
+              </AlertDescription>
+            </Alert>
+          )}
 
           <Button
             className='rounded-xl'

@@ -9,7 +9,7 @@ import { PieChart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useState } from "react";
 import { toast } from "react-toastify";
-import { decodeEventLog, getEventSignature } from "viem";
+import { decodeEventLog } from "viem";
 import {
   useChainId,
   useContractWrite,
@@ -19,8 +19,6 @@ import {
 import { DonutChart } from "./donut-chart";
 import { SplitFormPayee, SplitFormPayeeHeader } from "./split-form-payee";
 import TransactionMessage from "./transaction-message";
-import { Switch } from "@/components/ui/switch";
-import { ReleaseBountyOption } from "./release-bounty-option";
 
 export type PayeeState = {
   label?: string;

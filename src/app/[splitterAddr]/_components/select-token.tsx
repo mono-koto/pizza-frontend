@@ -11,10 +11,12 @@ import {
 import { TokenDetails } from "@/models";
 
 import { CommandList } from "@/components/ui/command";
+import { ETH_ADDRESS } from "@/config/config";
 import preferredTokens from "@/config/ordered-preferred-tokens.json";
 import useTokenBalances from "@/hooks/useTokenBalances";
-import { useOrderedTokens, useTokenDetails } from "@/hooks/useTokenDetails";
+import { useTokenDetails } from "@/hooks/useTokenDetails";
 import { symbolAddress } from "@/lib/tokens";
+import { TokenBalanceSuccess } from "alchemy-sdk";
 import {
   Command,
   CommandEmpty,
@@ -24,12 +26,9 @@ import {
 } from "cmdk";
 import Image from "next/image";
 import { useState } from "react";
-import { Address, formatUnits, isAddress } from "viem";
+import { Address, formatUnits } from "viem";
 import { useAccount, useBalance, useChainId } from "wagmi";
 import { TokenButton } from "./token-button";
-import { format } from "path";
-import { ETH_ADDRESS } from "@/config/config";
-import { TokenBalanceSuccess } from "alchemy-sdk";
 
 interface TokenSelectProps {
   defaultToken: Address;
@@ -77,8 +76,6 @@ export function SelectToken({
     } as TokenBalanceSuccess);
   }
 
-  const [currentToken, setCurrentToken] = useState<Address>(defaultToken);
-
   const [commandInputValue, setCommandInputValue] = useState("");
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<Address | undefined>();
@@ -86,7 +83,6 @@ export function SelectToken({
   const onSelect = (token: Address) => {
     setOpen(false);
     setValue(token);
-    setCurrentToken(token);
     if (token !== value) {
       onChange(token);
     }
@@ -94,9 +90,6 @@ export function SelectToken({
 
   const onCommandInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCommandInputValue(e.target.value);
-    if (isAddress(e.target.value)) {
-      setCurrentToken(e.target.value);
-    }
   };
 
   return (
