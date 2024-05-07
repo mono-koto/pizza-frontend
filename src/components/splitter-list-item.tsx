@@ -30,32 +30,32 @@ export default function SplitterListItem(
 
   const router = useRouter();
   return (
-    <div className='flex flex-row gap-4 text-xs splitter-list-item border border-border rounded-lg p-4 justify-stretch hover:border-foreground transition-colors cursor-pointer'>
-      <div className=' self-start flex flex-col justify-center'>
+    <div className="flex flex-row gap-4 text-xs splitter-list-item border border-border rounded-lg p-4 justify-stretch hover:border-foreground transition-colors cursor-pointer">
+      <div className=" self-start flex flex-col justify-center">
         <div onClick={() => router.push(`/${props.address}`)}>
           <SplitterMiniDonutChart address={props.address} />
         </div>
 
         <Button
           asChild
-          size='sm'
-          className='justify-self-stretch no-underline text-xs h-7'
-          variant='ghost'
+          size="sm"
+          className="justify-self-stretch no-underline text-xs h-7"
+          variant="ghost"
         >
           <Link href={`/${props.address}`}>Details</Link>
         </Button>
       </div>
-      <div className=' w-full space-y-2'>
-        <div className='flex flex-row justify-between flex-wrap items-baseline'>
-          <h3 className='text-2xl'>{props.payees.length}-way</h3>
+      <div className=" w-full space-y-2">
+        <div className="flex flex-row justify-between flex-wrap items-baseline">
+          <h3 className="text-2xl">{props.payees.length}-way</h3>
         </div>
         <p>
-          <BlockscannerLink address={props.address} kind='contract' />
+          <BlockscannerLink address={props.address} kind="contract" />
         </p>
 
         <div>
           Created by{" "}
-          <BlockscannerLink address={props.creator} kind='address' ens short />
+          <BlockscannerLink address={props.creator} kind="address" ens short />
           on {new Date(Number(props.createdAt) * 1000).toLocaleString()}
         </div>
 
@@ -66,14 +66,14 @@ export default function SplitterListItem(
             </div>
           </>
         )}
-        <div className='flex flex-row items-center gap-1'>
+        <div className="flex flex-row items-center gap-1">
           {props.payees.length} Payees:
-          <div className='ml-2 inline-block'>
+          <div className="ml-2 inline-block">
             {props.payees.map((p, i) => (
               <CustomAvatar
                 key={p}
                 address={p}
-                className='inline-block grow-0 w-4 h-4 -ml-2'
+                className="inline-block grow-0 w-4 h-4 -ml-2"
               />
             ))}
           </div>

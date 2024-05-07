@@ -31,59 +31,51 @@ async function getRecentSplitterCreations({
   token?: Address;
   client: PublicClient;
 }): Promise<SplitterCreation[]> {
-  const filter = await client.createContractEventFilter({
+  const events = await client.getContractEvents({
     address: getConfig(client.chain.id).factoryAddress,
     abi: PizzaFactoryAbi,
     eventName: "PizzaCreated",
     fromBlock: getConfig(client.chain.id).startBlock,
+    strict: true,
   });
 
-  const events = (await client.getFilterLogs({ filter }))
-    .reverse()
-    .slice(0, 10);
-
   return await Promise.all(
-    events.map(async (event) => {
-      const address = event.args.pizza;
-      if (!address) {
-        throw new Error("No address");
-      }
+    events
+      .reverse()
+      .slice(0, 10)
+      .map(async (event) => {
+        const address = event.args.pizza;
+        if (!address) {
+          throw new Error("No address");
+        }
 
-      const creator = event.args.creator;
-      if (!address) {
-        throw new Error("No creator");
-      }
-
-      const [
-        { payees, shares },
-        { balance, totalReleased },
-        block,
-        txnReceipt,
-      ] = await Promise.all([
-        getSplitterPayeesShares({
+        const { payees, shares } = await getSplitterPayeesShares({
           chainId: client.chain.id,
           address,
-        }),
-        getSplitterState({
+        });
+
+        const { balance, totalReleased } = await getSplitterState({
           chainId: client.chain.id,
           address,
           token,
-        }),
-        client.getBlock({ blockNumber: event.blockNumber }),
-        client.getTransactionReceipt({ hash: event.transactionHash }),
-      ]);
+        });
 
-      return {
-        address,
-        payees,
-        shares,
-        token,
-        balance,
-        totalReleased,
-        transactionHash: event.transactionHash,
-        createdAt: block.timestamp,
-        creator: txnReceipt.from,
-      };
-    })
+        const block = await client.getBlock({ blockNumber: event.blockNumber });
+        const txnReceipt = await client.getTransactionReceipt({
+          hash: event.transactionHash,
+        });
+
+        return {
+          address,
+          payees,
+          shares,
+          token,
+          balance,
+          totalReleased,
+          transactionHash: event.transactionHash,
+          createdAt: block.timestamp,
+          creator: txnReceipt.from,
+        };
+      })
   );
 }

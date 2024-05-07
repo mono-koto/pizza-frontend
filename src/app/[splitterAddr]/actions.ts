@@ -175,15 +175,15 @@ export async function getSplitterCreation({
 }) {
   const client = createClient(chainId);
 
-  const filter = await client.createContractEventFilter({
+  const events = await client.getContractEvents({
     address: getConfig(chainId).factoryAddress,
     abi: PizzaFactoryAbi,
     eventName: "PizzaCreated",
     args: { pizza: address },
     fromBlock: getConfig(chainId).startBlock,
+    strict: true,
   });
 
-  const events = await client.getFilterLogs({ filter });
   if (events.length === 0) {
     throw new Error("No creation event");
   }
@@ -208,17 +208,15 @@ export async function getSplitter({
   chainId: number;
   address: Address;
 }): Promise<Splitter & CreationInfo> {
-  const [{ payees, shares }, { transactionHash, createdAt, creator }] =
-    await Promise.all([
-      getSplitterPayeesShares({
-        chainId,
-        address,
-      }),
-      getSplitterCreation({
-        chainId,
-        address,
-      }),
-    ]);
+  const { payees, shares } = await getSplitterPayeesShares({
+    chainId,
+    address,
+  });
+
+  const { transactionHash, createdAt, creator } = await getSplitterCreation({
+    chainId,
+    address,
+  });
 
   return {
     address,

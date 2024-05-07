@@ -83,7 +83,7 @@ function ClientProviders({ children }: { children: React.ReactNode }) {
         >
           {children}
           <ToastContainer
-            position='bottom-right'
+            position="bottom-right"
             pauseOnFocusLoss={false}
             theme={thirdPartyTheme}
           />

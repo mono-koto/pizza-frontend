@@ -19,7 +19,7 @@ require("@tailwindcss/typography"),
       },
       extend: {
         fontFamily: {
-          sans: ["var(--font-sans)", ...fontFamily.sans],
+          sans: ["var(--font-sans)", ...fontFamily.sans, "Inter", "sans-serif"],
         },
         colors: {
           border: "hsl(var(--border))",
